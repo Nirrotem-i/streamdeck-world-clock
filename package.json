@@ -1,6 +1,6 @@
 {
   "name": "streamdeck-world-clock",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Stream Deck World Clock plugin with timezone explorer",
   "scripts": {
     "install-plugin": "ln -sf \"$(pwd)/com.nirrotem.worldclock.sdPlugin\" \"$HOME/Library/Application Support/com.elgato.StreamDeck/Plugins/com.nirrotem.worldclock.sdPlugin\""
