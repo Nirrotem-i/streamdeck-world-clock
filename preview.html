@@ -139,29 +139,27 @@
       }));
       const isDay = hour >= 6 && hour < 20;
 
-      const grad = ctx.createLinearGradient(0, 0, 0, 144);
-      if (isDay) {
-        grad.addColorStop(0, '#4a90d9');
-        grad.addColorStop(1, '#f5a623');
-      } else {
-        grad.addColorStop(0, '#0d1b2a');
-        grad.addColorStop(1, '#1b2838');
-      }
-      ctx.fillStyle = grad;
+      ctx.fillStyle = '#1a1a2e';
       ctx.fillRect(0, 0, 144, 144);
 
-      ctx.fillStyle = isDay ? '#ffffff' : '#8899aa';
+      // Sun/moon icon top-left
+      ctx.font = '18px Arial';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      ctx.fillText(isDay ? '☀' : '🌙', 8, 6);
+
+      ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 22px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(city.label, 72, 28);
 
       ctx.font = 'bold 32px Arial';
-      ctx.fillStyle = isDay ? '#fff8e1' : '#64ffda';
+      ctx.fillStyle = '#00d4ff';
       ctx.fillText(timeStr, 72, 68);
 
       ctx.font = 'bold 16px Arial';
-      ctx.fillStyle = isDay ? '#ffe082' : '#5c7a99';
+      ctx.fillStyle = '#888888';
       ctx.fillText(dateStr, 72, 100);
 
       if (globalOffsetMinutes !== 0) {
@@ -172,7 +170,7 @@
         if (offsetMins > 0) offsetStr += offsetMins + 'm';
 
         ctx.font = 'bold 16px Arial';
-        ctx.fillStyle = isDay ? '#ffffff' : '#ff6b6b';
+        ctx.fillStyle = '#ff6b6b';
         ctx.fillText(offsetStr, 72, 130);
       }
     }

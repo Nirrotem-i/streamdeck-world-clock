@@ -155,20 +155,17 @@ function updateCityDisplay(context) {
   canvas.height = 144;
   const ctx = canvas.getContext('2d');
 
-  // Gradient background
-  const grad = ctx.createLinearGradient(0, 0, 0, 144);
-  if (isDay) {
-    grad.addColorStop(0, '#4a90d9');
-    grad.addColorStop(1, '#f5a623');
-  } else {
-    grad.addColorStop(0, '#0d1b2a');
-    grad.addColorStop(1, '#1b2838');
-  }
-  ctx.fillStyle = grad;
+  ctx.fillStyle = '#1a1a2e';
   ctx.fillRect(0, 0, 144, 144);
 
+  // Sun/moon icon top-left
+  ctx.font = '18px Arial';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText(isDay ? '☀' : '🌙', 8, 6);
+
   // City label
-  ctx.fillStyle = isDay ? '#ffffff' : '#8899aa';
+  ctx.fillStyle = '#ffffff';
   ctx.font = 'bold 22px Arial';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -176,12 +173,12 @@ function updateCityDisplay(context) {
 
   // Time with AM/PM
   ctx.font = 'bold 32px Arial';
-  ctx.fillStyle = isDay ? '#fff8e1' : '#64ffda';
+  ctx.fillStyle = '#00d4ff';
   ctx.fillText(timeStr, 72, 68);
 
   // Date
   ctx.font = 'bold 16px Arial';
-  ctx.fillStyle = isDay ? '#ffe082' : '#5c7a99';
+  ctx.fillStyle = '#888888';
   ctx.fillText(dateStr, 72, 100);
 
   // Offset indicator when exploring
@@ -193,7 +190,7 @@ function updateCityDisplay(context) {
     if (offsetMins > 0) offsetStr += offsetMins + 'm';
 
     ctx.font = 'bold 16px Arial';
-    ctx.fillStyle = isDay ? '#ffffff' : '#ff6b6b';
+    ctx.fillStyle = '#ff6b6b';
     ctx.fillText(offsetStr, 72, 130);
   }
 
