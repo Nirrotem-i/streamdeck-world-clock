@@ -175,11 +175,11 @@
       ctx.fillText(city.label, 72, 28);
 
       ctx.font = 'bold 32px Arial';
-      ctx.fillStyle = '#00d4ff';
+      ctx.fillStyle = isDay ? '#ff9f43' : '#00d4ff';
       ctx.fillText(timeStr, 72, 68);
 
       ctx.font = 'bold 16px Arial';
-      ctx.fillStyle = '#888888';
+      ctx.fillStyle = '#666666';
       ctx.fillText(dateStr, 72, 100);
 
       if (globalOffsetMinutes !== 0) {

@@ -193,12 +193,12 @@ function updateCityDisplay(context) {
 
   // Time with AM/PM
   ctx.font = 'bold 32px Arial';
-  ctx.fillStyle = '#00d4ff';
+  ctx.fillStyle = isDay ? '#ff9f43' : '#00d4ff';
   ctx.fillText(timeStr, 72, 68);
 
   // Date
   ctx.font = 'bold 16px Arial';
-  ctx.fillStyle = '#888888';
+  ctx.fillStyle = '#666666';
   ctx.fillText(dateStr, 72, 100);
 
   // Offset indicator when exploring
