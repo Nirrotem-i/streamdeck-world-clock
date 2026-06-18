@@ -143,10 +143,30 @@
       ctx.fillRect(0, 0, 144, 144);
 
       // Sun/moon icon top-left
-      ctx.font = '18px Arial';
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'top';
-      ctx.fillText(isDay ? '☀' : '🌙', 8, 6);
+      if (isDay) {
+        ctx.fillStyle = '#ffd93d';
+        ctx.beginPath();
+        ctx.arc(20, 18, 7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#ffd93d';
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 8; i++) {
+          const angle = (i * Math.PI) / 4;
+          ctx.beginPath();
+          ctx.moveTo(20 + Math.cos(angle) * 10, 18 + Math.sin(angle) * 10);
+          ctx.lineTo(20 + Math.cos(angle) * 14, 18 + Math.sin(angle) * 14);
+          ctx.stroke();
+        }
+      } else {
+        ctx.fillStyle = '#aabbdd';
+        ctx.beginPath();
+        ctx.arc(20, 18, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#1a1a2e';
+        ctx.beginPath();
+        ctx.arc(25, 15, 7, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 22px Arial';
