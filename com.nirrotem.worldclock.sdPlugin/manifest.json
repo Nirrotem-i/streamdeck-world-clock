@@ -1,22 +1,5 @@
 {
-  "SDKVersion": 2,
-  "UUID": "com.nirrotem.worldclock",
   "Author": "Nir Rotem",
-  "CodePath": "plugin.html",
-  "Description": "World Clock with timezone explorer. View multiple timezones and shift time to compare across cities.",
-  "Name": "World Clock",
-  "Version": "1.0.2",
-  "OS": [
-    { "Platform": "mac", "MinimumVersion": "10.15" },
-    { "Platform": "windows", "MinimumVersion": "10" }
-  ],
-  "Software": {
-    "MinimumVersion": "6.4"
-  },
-  "Category": "World Clock",
-  "CategoryIcon": "imgs/category-icon",
-  "Icon": "imgs/plugin-icon",
-  "URL": "https://github.com/Nirrotem-i/streamdeck-world-clock",
   "Actions": [
     {
       "Icon": "imgs/clock-icon",
@@ -24,42 +7,64 @@
       "States": [{ "Image": "imgs/clock-icon" }],
       "Tooltip": "Displays the current time in a chosen timezone",
       "UUID": "com.nirrotem.worldclock.city",
-      "PropertyInspectorPath": "pi/city-pi.html"
+      "PropertyInspectorPath": "pi/city-pi.html",
+      "SupportedInMultiActions": false
     },
     {
       "Icon": "imgs/hour-plus-icon",
       "Name": "Hour +",
       "States": [{ "Image": "imgs/hour-plus-icon" }],
-      "Tooltip": "Shift all clocks forward by 1 hour",
+      "Tooltip": "Tap: +1h, Hold: +3h",
       "UUID": "com.nirrotem.worldclock.hour-plus"
     },
     {
       "Icon": "imgs/hour-minus-icon",
       "Name": "Hour -",
       "States": [{ "Image": "imgs/hour-minus-icon" }],
-      "Tooltip": "Shift all clocks back by 1 hour",
+      "Tooltip": "Tap: -1h, Hold: -3h",
       "UUID": "com.nirrotem.worldclock.hour-minus"
     },
     {
       "Icon": "imgs/min-plus-icon",
       "Name": "Min +",
       "States": [{ "Image": "imgs/min-plus-icon" }],
-      "Tooltip": "Tap: +1 min, Long press: +15 min",
+      "Tooltip": "Tap: +1 min, Hold: +15 min",
       "UUID": "com.nirrotem.worldclock.min-plus"
     },
     {
       "Icon": "imgs/min-minus-icon",
       "Name": "Min -",
       "States": [{ "Image": "imgs/min-minus-icon" }],
-      "Tooltip": "Tap: -1 min, Long press: -15 min",
+      "Tooltip": "Tap: -1 min, Hold: -15 min",
       "UUID": "com.nirrotem.worldclock.min-minus"
     },
     {
       "Icon": "imgs/reset-icon",
       "Name": "Reset",
       "States": [{ "Image": "imgs/reset-icon" }],
-      "Tooltip": "Reset all clocks to current real time",
+      "Tooltip": "Tap: reset, Hold: lock/unlock auto-reset",
       "UUID": "com.nirrotem.worldclock.reset"
     }
-  ]
+  ],
+  "Category": "World Clock",
+  "CategoryIcon": "imgs/category-icon",
+  "CodePath": "src/plugin.js",
+  "Description": "World Clock with timezone explorer. View multiple timezones and shift time to compare across cities.",
+  "Icon": "imgs/plugin-icon",
+  "Name": "World Clock",
+  "Nodejs": {
+    "Version": "20",
+    "Debug": "127.0.0.1:23654"
+  },
+  "OS": [
+    { "Platform": "mac", "MinimumVersion": "10.15" },
+    { "Platform": "windows", "MinimumVersion": "10" }
+  ],
+  "SDKVersion": 2,
+  "Software": {
+    "MinimumVersion": "6.0"
+  },
+  "URL": "https://github.com/Nirrotem-i/streamdeck-world-clock",
+  "UUID": "com.nirrotem.worldclock",
+  "Version": "2.0.0"
 }

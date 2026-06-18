@@ -3,18 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <title>City Clock Settings</title>
+  <link rel="stylesheet" href="https://sdpi-components.dev/css/sdpi.css" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 12px;
       color: #d8d8d8;
       background: #2d2d2d;
+      margin: 0;
       padding: 12px;
     }
-    .sdpi-item {
-      margin-bottom: 12px;
-    }
+    .sdpi-item { margin-bottom: 12px; }
     label {
       display: block;
       font-weight: 600;
@@ -33,10 +32,7 @@
       padding: 8px 10px;
       font-size: 13px;
     }
-    input[type="text"]:focus {
-      outline: none;
-      border-color: #0078d4;
-    }
+    input[type="text"]:focus { outline: none; border-color: #0078d4; }
     .selected-tz {
       background: #3b3b3b;
       border: 1px solid #555;
@@ -58,14 +54,8 @@
       cursor: pointer;
       font-size: 11px;
     }
-    .selected-tz .change-btn:hover {
-      background: #0078d4;
-      color: #fff;
-    }
-    .search-container {
-      position: relative;
-      margin-bottom: 8px;
-    }
+    .selected-tz .change-btn:hover { background: #0078d4; color: #fff; }
+    .search-container { position: relative; margin-bottom: 8px; }
     .search-container input {
       width: 100%;
       background: #3b3b3b;
@@ -75,12 +65,9 @@
       padding: 8px 10px 8px 30px;
       font-size: 13px;
     }
-    .search-container input:focus {
-      outline: none;
-      border-color: #0078d4;
-    }
+    .search-container input:focus { outline: none; border-color: #0078d4; }
     .search-container::before {
-      content: "🔍";
+      content: "\1F50D";
       position: absolute;
       left: 8px;
       top: 50%;
@@ -95,17 +82,9 @@
       border-radius: 4px;
       background: #333;
     }
-    .tz-table-container::-webkit-scrollbar {
-      width: 6px;
-    }
-    .tz-table-container::-webkit-scrollbar-thumb {
-      background: #666;
-      border-radius: 3px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+    .tz-table-container::-webkit-scrollbar { width: 6px; }
+    .tz-table-container::-webkit-scrollbar-thumb { background: #666; border-radius: 3px; }
+    table { width: 100%; border-collapse: collapse; }
     table th {
       position: sticky;
       top: 0;
@@ -123,21 +102,11 @@
       font-size: 12px;
       cursor: pointer;
     }
-    table tr:hover td {
-      background: #0078d4;
-      color: #fff;
-    }
-    table tr.selected td {
-      background: #005a9e;
-      color: #fff;
-    }
+    table tr:hover td { background: #0078d4; color: #fff; }
+    table tr.selected td { background: #005a9e; color: #fff; }
     .city-name { color: #eee; }
     .tz-id { color: #888; font-size: 11px; }
-    .no-results {
-      padding: 20px;
-      text-align: center;
-      color: #666;
-    }
+    .no-results { padding: 20px; text-align: center; color: #666; }
     .picker-hidden { display: none; }
   </style>
 </head>
@@ -176,46 +145,46 @@
   <script>
     let websocket = null;
     let uuid = null;
-    let selectedTimezone = 'America/New_York';
+    let selectedTimezone = "America/New_York";
 
-    const TIMEZONES = ['UTC', ...Intl.supportedValuesOf('timeZone').filter(tz => tz !== 'UTC')];
+    const TIMEZONES = ["UTC", ...Intl.supportedValuesOf("timeZone").filter(tz => tz !== "UTC")];
 
     function getCityName(tz) {
-      const parts = tz.split('/');
-      return parts[parts.length - 1].replace(/_/g, ' ');
+      const parts = tz.split("/");
+      return parts[parts.length - 1].replace(/_/g, " ");
     }
 
     function buildTable(filter) {
-      const tbody = document.getElementById('tz-list');
-      const noResults = document.getElementById('no-results');
-      const lowerFilter = (filter || '').toLowerCase();
+      const tbody = document.getElementById("tz-list");
+      const noResults = document.getElementById("no-results");
+      const lowerFilter = (filter || "").toLowerCase();
 
       const filtered = TIMEZONES.filter(tz => {
         if (!lowerFilter) return true;
         const city = getCityName(tz).toLowerCase();
-        const full = tz.toLowerCase().replace(/[_/]/g, ' ');
+        const full = tz.toLowerCase().replace(/[_/]/g, " ");
         return city.includes(lowerFilter) || full.includes(lowerFilter) || tz.toLowerCase().includes(lowerFilter);
       });
 
       if (filtered.length === 0) {
-        tbody.innerHTML = '';
-        noResults.classList.remove('picker-hidden');
+        tbody.innerHTML = "";
+        noResults.classList.remove("picker-hidden");
         return;
       }
 
-      noResults.classList.add('picker-hidden');
+      noResults.classList.add("picker-hidden");
 
       tbody.innerHTML = filtered.map(tz => {
         const city = getCityName(tz);
-        const isSelected = tz === selectedTimezone ? ' class="selected"' : '';
+        const isSelected = tz === selectedTimezone ? ' class="selected"' : "";
         return `<tr${isSelected} data-tz="${tz}">
           <td class="city-name">${city}</td>
           <td class="tz-id">${tz}</td>
         </tr>`;
-      }).join('');
+      }).join("");
 
-      tbody.querySelectorAll('tr').forEach(row => {
-        row.addEventListener('click', () => {
+      tbody.querySelectorAll("tr").forEach(row => {
+        row.addEventListener("click", () => {
           selectTimezone(row.dataset.tz);
         });
       });
@@ -223,16 +192,16 @@
 
     function selectTimezone(tz) {
       selectedTimezone = tz;
-      document.getElementById('selected-name').textContent = tz;
-      document.getElementById('picker').classList.add('picker-hidden');
-      document.getElementById('search').value = '';
+      document.getElementById("selected-name").textContent = tz;
+      document.getElementById("picker").classList.add("picker-hidden");
+      document.getElementById("search").value = "";
       saveSettings();
     }
 
     function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
       uuid = inUUID;
 
-      websocket = new WebSocket('ws://127.0.0.1:' + inPort);
+      websocket = new WebSocket("ws://127.0.0.1:" + inPort);
 
       websocket.onopen = function () {
         websocket.send(JSON.stringify({ event: inRegisterEvent, uuid: inUUID }));
@@ -241,47 +210,47 @@
 
       websocket.onmessage = function (evt) {
         const msg = JSON.parse(evt.data);
-        if (msg.event === 'didReceiveSettings') {
+        if (msg.event === "didReceiveSettings") {
           const settings = msg.payload.settings || {};
-          if (settings.label) document.getElementById('label').value = settings.label;
+          if (settings.label) document.getElementById("label").value = settings.label;
           if (settings.timezone) {
             selectedTimezone = settings.timezone;
-            document.getElementById('selected-name').textContent = settings.timezone;
+            document.getElementById("selected-name").textContent = settings.timezone;
           }
         }
       };
 
-      document.getElementById('label').addEventListener('input', saveSettings);
+      document.getElementById("label").addEventListener("input", saveSettings);
 
-      document.getElementById('change-btn').addEventListener('click', () => {
-        const picker = document.getElementById('picker');
-        picker.classList.toggle('picker-hidden');
-        if (!picker.classList.contains('picker-hidden')) {
-          buildTable('');
-          document.getElementById('search').focus();
+      document.getElementById("change-btn").addEventListener("click", () => {
+        const picker = document.getElementById("picker");
+        picker.classList.toggle("picker-hidden");
+        if (!picker.classList.contains("picker-hidden")) {
+          buildTable("");
+          document.getElementById("search").focus();
         }
       });
 
-      document.getElementById('search').addEventListener('input', (e) => {
+      document.getElementById("search").addEventListener("input", (e) => {
         buildTable(e.target.value);
       });
     }
 
     function requestSettings() {
       websocket.send(JSON.stringify({
-        event: 'getSettings',
+        event: "getSettings",
         context: uuid
       }));
     }
 
     function saveSettings() {
       const payload = {
-        label: document.getElementById('label').value || 'NYC',
+        label: document.getElementById("label").value || "NYC",
         timezone: selectedTimezone
       };
 
       websocket.send(JSON.stringify({
-        event: 'setSettings',
+        event: "setSettings",
         context: uuid,
         payload: payload
       }));

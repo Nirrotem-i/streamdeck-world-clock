@@ -90,10 +90,11 @@ Open these files in a browser to test without hardware:
 ```
 com.nirrotem.worldclock.sdPlugin/
   manifest.json        — Plugin manifest (actions, icons, metadata)
-  plugin.html          — Plugin entry point
-  plugin.js            — Main plugin logic (WebSocket, canvas rendering)
+  src/plugin.js        — Main plugin logic (Node.js, SDK 6, canvas rendering)
   pi/city-pi.html      — Property Inspector (timezone picker UI)
   imgs/                — Action icons (PNG + SVG)
+  package.json         — Node.js dependencies
+  node_modules/        — Installed packages
 ```
 
 ### Updating the Plugin
@@ -114,6 +115,7 @@ python3 generate-icons.py
 
 ## Version History
 
+- **2.0.0** — Migrate to Stream Deck SDK 6 (Node.js) for Marketplace compatibility
 - **1.0.2** — Fix encoding on minus buttons, add UTC timezone, remove 3rd column from picker
 - **1.0.1** — Add day/night icons, colored time, date display, long-press controls, auto-reset
 - **1.0.0** — Initial release with city clocks and H/M offset controls
