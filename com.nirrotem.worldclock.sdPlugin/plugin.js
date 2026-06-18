@@ -134,7 +134,13 @@ function updateCityDisplay(context) {
     timeZone: city.timezone,
     hour: '2-digit',
     minute: '2-digit',
-    hour12: false
+    hour12: true
+  });
+
+  const dateStr = now.toLocaleDateString('en-US', {
+    timeZone: city.timezone,
+    month: 'short',
+    day: 'numeric'
   });
 
   const canvas = document.createElement('canvas');
@@ -142,21 +148,25 @@ function updateCityDisplay(context) {
   canvas.height = 144;
   const ctx = canvas.getContext('2d');
 
-  // Background: dark blue in live mode, purple when offset is active
   ctx.fillStyle = globalOffsetMinutes === 0 ? '#1a1a2e' : '#2d1b4e';
   ctx.fillRect(0, 0, 144, 144);
 
   // City label
   ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 24px Arial';
+  ctx.font = 'bold 22px Arial';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(city.label, 72, 40);
+  ctx.fillText(city.label, 72, 28);
 
-  // Time
-  ctx.font = 'bold 38px Arial';
+  // Time with AM/PM
+  ctx.font = 'bold 32px Arial';
   ctx.fillStyle = globalOffsetMinutes === 0 ? '#00d4ff' : '#ff9f43';
-  ctx.fillText(timeStr, 72, 85);
+  ctx.fillText(timeStr, 72, 68);
+
+  // Date
+  ctx.font = '16px Arial';
+  ctx.fillStyle = '#888888';
+  ctx.fillText(dateStr, 72, 100);
 
   // Offset indicator when exploring
   if (globalOffsetMinutes !== 0) {
@@ -166,9 +176,9 @@ function updateCityDisplay(context) {
     let offsetStr = sign + offsetHours + 'h';
     if (offsetMins > 0) offsetStr += offsetMins + 'm';
 
-    ctx.font = 'bold 18px Arial';
+    ctx.font = 'bold 16px Arial';
     ctx.fillStyle = '#ff6b6b';
-    ctx.fillText(offsetStr, 72, 125);
+    ctx.fillText(offsetStr, 72, 130);
   }
 
   const imageData = canvas.toDataURL('image/png');

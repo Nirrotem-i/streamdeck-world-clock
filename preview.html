@@ -123,21 +123,31 @@
         timeZone: city.timezone,
         hour: '2-digit',
         minute: '2-digit',
-        hour12: false
+        hour12: true
+      });
+
+      const dateStr = now.toLocaleDateString('en-US', {
+        timeZone: city.timezone,
+        month: 'short',
+        day: 'numeric'
       });
 
       ctx.fillStyle = globalOffsetMinutes === 0 ? '#1a1a2e' : '#2d1b4e';
       ctx.fillRect(0, 0, 144, 144);
 
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 24px Arial';
+      ctx.font = 'bold 22px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(city.label, 72, 40);
+      ctx.fillText(city.label, 72, 28);
 
-      ctx.font = 'bold 38px Arial';
+      ctx.font = 'bold 32px Arial';
       ctx.fillStyle = globalOffsetMinutes === 0 ? '#00d4ff' : '#ff9f43';
-      ctx.fillText(timeStr, 72, 85);
+      ctx.fillText(timeStr, 72, 68);
+
+      ctx.font = '16px Arial';
+      ctx.fillStyle = '#888888';
+      ctx.fillText(dateStr, 72, 100);
 
       if (globalOffsetMinutes !== 0) {
         const offsetHours = Math.floor(Math.abs(globalOffsetMinutes) / 60);
@@ -146,9 +156,9 @@
         let offsetStr = sign + offsetHours + 'h';
         if (offsetMins > 0) offsetStr += offsetMins + 'm';
 
-        ctx.font = 'bold 18px Arial';
+        ctx.font = 'bold 16px Arial';
         ctx.fillStyle = '#ff6b6b';
-        ctx.fillText(offsetStr, 72, 125);
+        ctx.fillText(offsetStr, 72, 130);
       }
     }
 
