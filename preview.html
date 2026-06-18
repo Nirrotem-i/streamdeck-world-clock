@@ -95,7 +95,7 @@
 
   <div class="instructions">
     Click <kbd>H+</kbd> <kbd>H−</kbd> to shift hours &nbsp;|&nbsp;
-    <kbd>M+</kbd> <kbd>M−</kbd> for 15-min steps &nbsp;|&nbsp;
+    Click <kbd>M+</kbd> <kbd>M−</kbd> for 1 min, hold for 15 min &nbsp;|&nbsp;
     <kbd>↺</kbd> to reset<br>
     Top row shows live clocks that all shift together
   </div>
@@ -180,8 +180,8 @@
 
       renderControl('ctrl-hour-plus', 'H+', '1 hr', '#4ecca3');
       renderControl('ctrl-hour-minus', 'H−', '1 hr', '#ff6b6b');
-      renderControl('ctrl-min-plus', 'M+', '15 min', '#4ecca3');
-      renderControl('ctrl-min-minus', 'M−', '15 min', '#ff6b6b');
+      renderControl('ctrl-min-plus', 'M+', '1m / 15m', '#4ecca3');
+      renderControl('ctrl-min-minus', 'M−', '1m / 15m', '#ff6b6b');
 
       const resetColor = globalOffsetMinutes === 0 ? '#555' : '#ffd93d';
       renderControl('ctrl-reset', '↺', 'RESET', resetColor);
@@ -203,9 +203,39 @@
 
     document.getElementById('ctrl-hour-plus').addEventListener('click', () => { globalOffsetMinutes += 60; updateAll(); });
     document.getElementById('ctrl-hour-minus').addEventListener('click', () => { globalOffsetMinutes -= 60; updateAll(); });
-    document.getElementById('ctrl-min-plus').addEventListener('click', () => { globalOffsetMinutes += 15; updateAll(); });
-    document.getElementById('ctrl-min-minus').addEventListener('click', () => { globalOffsetMinutes -= 15; updateAll(); });
     document.getElementById('ctrl-reset').addEventListener('click', () => { globalOffsetMinutes = 0; updateAll(); });
+
+    const LONG_PRESS_MS = 500;
+
+    function setupMinButton(id, shortDelta, longDelta) {
+      const el = document.getElementById(id);
+      let timer = null;
+      let fired = false;
+
+      el.addEventListener('mousedown', () => {
+        fired = false;
+        timer = setTimeout(() => {
+          fired = true;
+          globalOffsetMinutes += longDelta;
+          updateAll();
+        }, LONG_PRESS_MS);
+      });
+
+      el.addEventListener('mouseup', () => {
+        clearTimeout(timer);
+        if (!fired) {
+          globalOffsetMinutes += shortDelta;
+          updateAll();
+        }
+      });
+
+      el.addEventListener('mouseleave', () => {
+        clearTimeout(timer);
+      });
+    }
+
+    setupMinButton('ctrl-min-plus', 1, 15);
+    setupMinButton('ctrl-min-minus', -1, -15);
 
     updateAll();
     setInterval(updateAll, 1000);

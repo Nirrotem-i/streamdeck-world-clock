@@ -3,6 +3,8 @@ let globalOffsetMinutes = 0;
 let cityContexts = {};
 let controlContexts = {};
 let updateInterval = null;
+let keyDownTimers = {};
+const LONG_PRESS_MS = 500;
 
 const ACTIONS = {
   CITY: 'com.nirrotem.worldclock.city',
@@ -61,31 +63,50 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
         break;
 
       case 'keyDown':
-        handleKeyPress(action);
+        handleKeyDown(action, context);
+        break;
+
+      case 'keyUp':
+        handleKeyUp(action, context);
         break;
     }
   };
 }
 
-function handleKeyPress(action) {
-  switch (action) {
-    case ACTIONS.HOUR_PLUS:
-      globalOffsetMinutes += 60;
-      break;
-    case ACTIONS.HOUR_MINUS:
-      globalOffsetMinutes -= 60;
-      break;
-    case ACTIONS.MIN_PLUS:
-      globalOffsetMinutes += 15;
-      break;
-    case ACTIONS.MIN_MINUS:
-      globalOffsetMinutes -= 15;
-      break;
-    case ACTIONS.RESET:
-      globalOffsetMinutes = 0;
-      break;
+function handleKeyDown(action, context) {
+  if (action === ACTIONS.MIN_PLUS || action === ACTIONS.MIN_MINUS) {
+    keyDownTimers[context] = { action, time: Date.now(), fired: false };
+    setTimeout(() => {
+      const entry = keyDownTimers[context];
+      if (entry && !entry.fired) {
+        entry.fired = true;
+        globalOffsetMinutes += action === ACTIONS.MIN_PLUS ? 15 : -15;
+        updateAllDisplays();
+      }
+    }, LONG_PRESS_MS);
+  } else {
+    switch (action) {
+      case ACTIONS.HOUR_PLUS:
+        globalOffsetMinutes += 60;
+        break;
+      case ACTIONS.HOUR_MINUS:
+        globalOffsetMinutes -= 60;
+        break;
+      case ACTIONS.RESET:
+        globalOffsetMinutes = 0;
+        break;
+    }
+    updateAllDisplays();
   }
-  updateAllDisplays();
+}
+
+function handleKeyUp(action, context) {
+  const entry = keyDownTimers[context];
+  if (entry && !entry.fired) {
+    globalOffsetMinutes += action === ACTIONS.MIN_PLUS ? 1 : -1;
+    updateAllDisplays();
+  }
+  delete keyDownTimers[context];
 }
 
 function startUpdateLoop() {
@@ -183,12 +204,12 @@ function updateControlDisplay(context, action) {
       break;
     case ACTIONS.MIN_PLUS:
       label = 'M+';
-      sublabel = '15 min';
+      sublabel = '1m / 15m';
       color = '#4ecca3';
       break;
     case ACTIONS.MIN_MINUS:
       label = 'M−';
-      sublabel = '15 min';
+      sublabel = '1m / 15m';
       color = '#ff6b6b';
       break;
     case ACTIONS.RESET:
