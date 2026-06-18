@@ -14,24 +14,6 @@ A Stream Deck plugin that displays multiple world clocks and lets you explore ti
 - **Date display** — Shows the local date for each city (useful when crossing midnight)
 - **AM/PM format** — 12-hour time display
 
-## Installation
-
-### macOS
-
-```bash
-cp -r com.nirrotem.worldclock.sdPlugin \
-  "$HOME/Library/Application Support/com.elgato.StreamDeck/Plugins/"
-killall "Elgato Stream Deck" 2>/dev/null; open -a "Elgato Stream Deck"
-```
-
-### Windows
-
-Copy the `com.nirrotem.worldclock.sdPlugin` folder to:
-```
-%APPDATA%\Elgato\StreamDeck\Plugins\
-```
-Then restart the Stream Deck application.
-
 ## Usage
 
 ### Adding Clocks
@@ -83,7 +65,7 @@ Each city tile displays:
        +3h
 ```
 
-- Top-left: Sun (6 AM–8 PM) or Moon (8 PM–6 AM) icon
+- Top-left: Sun (6 AM-8 PM) or Moon (8 PM-6 AM) icon
 - Top-center: City label
 - Center: Time in 12-hour AM/PM format
 - Below time: Date
@@ -135,6 +117,12 @@ python3 generate-icons.py
 - **1.0.2** — Fix encoding on minus buttons, add UTC timezone, remove 3rd column from picker
 - **1.0.1** — Add day/night icons, colored time, date display, long-press controls, auto-reset
 - **1.0.0** — Initial release with city clocks and H/M offset controls
+
+## Support
+
+If you find this plugin useful, consider supporting my work:
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/nirro)
 
 ## License
 
