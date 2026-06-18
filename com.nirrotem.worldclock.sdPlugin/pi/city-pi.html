@@ -133,7 +133,6 @@
     }
     .city-name { color: #eee; }
     .tz-id { color: #888; font-size: 11px; }
-    .tz-offset { color: #aaa; font-size: 11px; }
     .no-results {
       padding: 20px;
       text-align: center;
@@ -165,7 +164,6 @@
             <tr>
               <th>City</th>
               <th>Timezone</th>
-              <th>UTC</th>
             </tr>
           </thead>
           <tbody id="tz-list"></tbody>
@@ -180,20 +178,7 @@
     let uuid = null;
     let selectedTimezone = 'America/New_York';
 
-    const TIMEZONES = Intl.supportedValuesOf('timeZone');
-
-    function getUtcOffset(tz) {
-      try {
-        const now = new Date();
-        const str = now.toLocaleString('en-US', { timeZone: tz, timeZoneName: 'shortOffset' });
-        const match = str.match(/GMT([+-]\d{1,2}(?::\d{2})?)/);
-        if (match) return 'UTC' + match[1];
-        const parts = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'shortOffset' }).formatToParts(now);
-        const tzPart = parts.find(p => p.type === 'timeZoneName');
-        if (tzPart) return tzPart.value;
-      } catch (e) {}
-      return '';
-    }
+    const TIMEZONES = ['UTC', ...Intl.supportedValuesOf('timeZone').filter(tz => tz !== 'UTC')];
 
     function getCityName(tz) {
       const parts = tz.split('/');
@@ -208,8 +193,8 @@
       const filtered = TIMEZONES.filter(tz => {
         if (!lowerFilter) return true;
         const city = getCityName(tz).toLowerCase();
-        const full = tz.toLowerCase().replace(/_/g, ' ');
-        return city.includes(lowerFilter) || full.includes(lowerFilter);
+        const full = tz.toLowerCase().replace(/[_/]/g, ' ');
+        return city.includes(lowerFilter) || full.includes(lowerFilter) || tz.toLowerCase().includes(lowerFilter);
       });
 
       if (filtered.length === 0) {
@@ -222,12 +207,10 @@
 
       tbody.innerHTML = filtered.map(tz => {
         const city = getCityName(tz);
-        const offset = getUtcOffset(tz);
         const isSelected = tz === selectedTimezone ? ' class="selected"' : '';
         return `<tr${isSelected} data-tz="${tz}">
           <td class="city-name">${city}</td>
           <td class="tz-id">${tz}</td>
-          <td class="tz-offset">${offset}</td>
         </tr>`;
       }).join('');
 
