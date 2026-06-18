@@ -1,5 +1,6 @@
 {
   "SDKVersion": 2,
+  "UUID": "com.nirrotem.worldclock",
   "Author": "Nir Rotem",
   "CodePath": "plugin.html",
   "Description": "World Clock with timezone explorer. View multiple timezones and shift time to compare across cities.",
@@ -15,7 +16,7 @@
   "Category": "World Clock",
   "CategoryIcon": "imgs/category-icon",
   "Icon": "imgs/plugin-icon",
-  "URL": "https://github.com/nirrotem/streamdeck-world-clock",
+  "URL": "https://github.com/Nirrotem-i/streamdeck-world-clock",
   "Actions": [
     {
       "Icon": "imgs/clock-icon",
