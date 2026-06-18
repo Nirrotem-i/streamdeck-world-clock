@@ -1,10 +1,18 @@
 {
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
   "Author": "Nir Rotem",
   "Actions": [
     {
       "Icon": "imgs/clock-icon",
       "Name": "City Clock",
-      "States": [{ "Image": "imgs/clock-icon" }],
+      "States": [
+        {
+          "Image": "imgs/clock-icon"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
       "Tooltip": "Displays the current time in a chosen timezone",
       "UUID": "com.nirrotem.worldclock.city",
       "PropertyInspectorPath": "pi/city-pi.html",
@@ -13,58 +21,99 @@
     {
       "Icon": "imgs/hour-plus-icon",
       "Name": "Hour +",
-      "States": [{ "Image": "imgs/hour-plus-icon" }],
+      "States": [
+        {
+          "Image": "imgs/hour-plus-icon"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
       "Tooltip": "Tap: +1h, Hold: +3h",
       "UUID": "com.nirrotem.worldclock.hour-plus"
     },
     {
       "Icon": "imgs/hour-minus-icon",
       "Name": "Hour -",
-      "States": [{ "Image": "imgs/hour-minus-icon" }],
+      "States": [
+        {
+          "Image": "imgs/hour-minus-icon"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
       "Tooltip": "Tap: -1h, Hold: -3h",
       "UUID": "com.nirrotem.worldclock.hour-minus"
     },
     {
       "Icon": "imgs/min-plus-icon",
       "Name": "Min +",
-      "States": [{ "Image": "imgs/min-plus-icon" }],
+      "States": [
+        {
+          "Image": "imgs/min-plus-icon"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
       "Tooltip": "Tap: +1 min, Hold: +15 min",
       "UUID": "com.nirrotem.worldclock.min-plus"
     },
     {
       "Icon": "imgs/min-minus-icon",
       "Name": "Min -",
-      "States": [{ "Image": "imgs/min-minus-icon" }],
+      "States": [
+        {
+          "Image": "imgs/min-minus-icon"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
       "Tooltip": "Tap: -1 min, Hold: -15 min",
       "UUID": "com.nirrotem.worldclock.min-minus"
     },
     {
       "Icon": "imgs/reset-icon",
       "Name": "Reset",
-      "States": [{ "Image": "imgs/reset-icon" }],
+      "States": [
+        {
+          "Image": "imgs/reset-icon"
+        }
+      ],
+      "Controllers": [
+        "Keypad"
+      ],
       "Tooltip": "Tap: reset, Hold: lock/unlock auto-reset",
       "UUID": "com.nirrotem.worldclock.reset"
     }
   ],
-  "Category": "World Clock",
+  "Category": "TimeShift",
   "CategoryIcon": "imgs/category-icon",
   "CodePath": "src/plugin.js",
-  "Description": "World Clock with timezone explorer. View multiple timezones and shift time to compare across cities.",
+  "Description": "Explore time across the globe. Add city clocks, shift hours and minutes, and compare timezones instantly from your Stream Deck.",
   "Icon": "imgs/plugin-icon",
-  "Name": "World Clock",
+  "Name": "TimeShift",
   "Nodejs": {
     "Version": "20",
-    "Debug": "127.0.0.1:23654"
+    "Debug": "enabled"
   },
   "OS": [
-    { "Platform": "mac", "MinimumVersion": "10.15" },
-    { "Platform": "windows", "MinimumVersion": "10" }
+    {
+      "Platform": "mac",
+      "MinimumVersion": "10.15"
+    },
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
   ],
-  "SDKVersion": 2,
+  "SDKVersion": 3,
   "Software": {
-    "MinimumVersion": "6.0"
+    "MinimumVersion": "6.9"
   },
   "URL": "https://github.com/Nirrotem-i/streamdeck-world-clock",
   "UUID": "com.nirrotem.worldclock",
-  "Version": "2.0.2"
+  "Version": "2.0.2.0"
 }

@@ -1,6 +1,6 @@
-# World Clock — Stream Deck Plugin
+# TimeShift — Stream Deck Plugin
 
-A Stream Deck plugin that displays multiple world clocks and lets you explore time differences across timezones by shifting time forward or backward.
+Explore time across the globe — shift hours and minutes to compare timezones instantly from your Stream Deck.
 
 ## Features
 
@@ -19,7 +19,7 @@ A Stream Deck plugin that displays multiple world clocks and lets you explore ti
 ### Adding Clocks
 
 1. Open the Stream Deck app
-2. Find **"World Clock"** in the action categories (right panel)
+2. Find **"TimeShift"** in the action categories (right panel)
 3. Drag **City Clock** onto any key
 4. Click the key to open settings:
    - **Display Name** — Short label (max 6 chars, e.g. "NYC", "TLV", "LON")
@@ -82,7 +82,7 @@ Open these files in a browser to test without hardware:
 
 ### Requirements
 
-- Elgato Stream Deck software 6.4+
+- Elgato Stream Deck software 6.9+
 - Stream Deck hardware (Classic 15-key, XL 32-key, Mini 6-key, or Plus)
 
 ### Project Structure
