@@ -280,7 +280,7 @@ function updateControlDisplay(context, action) {
       color = '#4ecca3';
       break;
     case ACTIONS.HOUR_MINUS:
-      label = 'H−';
+      label = 'H-';
       sublabel = '1h / 3h';
       color = '#ff6b6b';
       break;
@@ -290,7 +290,7 @@ function updateControlDisplay(context, action) {
       color = '#4ecca3';
       break;
     case ACTIONS.MIN_MINUS:
-      label = 'M−';
+      label = 'M-';
       sublabel = '1m / 15m';
       color = '#ff6b6b';
       break;
