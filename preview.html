@@ -221,8 +221,8 @@
     function updateAll() {
       cities.forEach((city, i) => renderCity('city-' + i, city));
 
-      renderControl('ctrl-hour-plus', 'H+', '1 hr', '#4ecca3');
-      renderControl('ctrl-hour-minus', 'H−', '1 hr', '#ff6b6b');
+      renderControl('ctrl-hour-plus', 'H+', '1h / 3h', '#4ecca3');
+      renderControl('ctrl-hour-minus', 'H−', '1h / 3h', '#ff6b6b');
       renderControl('ctrl-min-plus', 'M+', '1m / 15m', '#4ecca3');
       renderControl('ctrl-min-minus', 'M−', '1m / 15m', '#ff6b6b');
 
@@ -244,13 +244,11 @@
       }
     }
 
-    document.getElementById('ctrl-hour-plus').addEventListener('click', () => { globalOffsetMinutes += 60; updateAll(); });
-    document.getElementById('ctrl-hour-minus').addEventListener('click', () => { globalOffsetMinutes -= 60; updateAll(); });
     document.getElementById('ctrl-reset').addEventListener('click', () => { globalOffsetMinutes = 0; updateAll(); });
 
     const LONG_PRESS_MS = 500;
 
-    function setupMinButton(id, shortDelta, longDelta) {
+    function setupLongPressButton(id, shortDelta, longDelta) {
       const el = document.getElementById(id);
       let timer = null;
       let fired = false;
@@ -277,8 +275,10 @@
       });
     }
 
-    setupMinButton('ctrl-min-plus', 1, 15);
-    setupMinButton('ctrl-min-minus', -1, -15);
+    setupLongPressButton('ctrl-hour-plus', 60, 180);
+    setupLongPressButton('ctrl-hour-minus', -60, -180);
+    setupLongPressButton('ctrl-min-plus', 1, 15);
+    setupLongPressButton('ctrl-min-minus', -1, -15);
 
     updateAll();
     setInterval(updateAll, 1000);

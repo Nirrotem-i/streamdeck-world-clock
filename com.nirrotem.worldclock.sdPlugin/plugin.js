@@ -84,26 +84,30 @@ function handleKeyDown(action, context) {
         updateAllDisplays();
       }
     }, LONG_PRESS_MS);
-  } else {
-    switch (action) {
-      case ACTIONS.HOUR_PLUS:
-        globalOffsetMinutes += 60;
-        break;
-      case ACTIONS.HOUR_MINUS:
-        globalOffsetMinutes -= 60;
-        break;
-      case ACTIONS.RESET:
-        globalOffsetMinutes = 0;
-        break;
-    }
+  } else if (action === ACTIONS.HOUR_PLUS || action === ACTIONS.HOUR_MINUS) {
+    keyDownTimers[context] = { action, time: Date.now(), fired: false };
+    setTimeout(() => {
+      const entry = keyDownTimers[context];
+      if (entry && !entry.fired) {
+        entry.fired = true;
+        globalOffsetMinutes += action === ACTIONS.HOUR_PLUS ? 180 : -180;
+        updateAllDisplays();
+      }
+    }, LONG_PRESS_MS);
+  } else if (action === ACTIONS.RESET) {
+    globalOffsetMinutes = 0;
     updateAllDisplays();
   }
 }
 
 function handleKeyUp(action, context) {
   const entry = keyDownTimers[context];
-  if (entry && !entry.fired) {
-    globalOffsetMinutes += action === ACTIONS.MIN_PLUS ? 1 : -1;
+  if (!entry) return;
+  if (!entry.fired) {
+    if (action === ACTIONS.MIN_PLUS) globalOffsetMinutes += 1;
+    else if (action === ACTIONS.MIN_MINUS) globalOffsetMinutes -= 1;
+    else if (action === ACTIONS.HOUR_PLUS) globalOffsetMinutes += 60;
+    else if (action === ACTIONS.HOUR_MINUS) globalOffsetMinutes -= 60;
     updateAllDisplays();
   }
   delete keyDownTimers[context];
@@ -237,12 +241,12 @@ function updateControlDisplay(context, action) {
   switch (action) {
     case ACTIONS.HOUR_PLUS:
       label = 'H+';
-      sublabel = '1 hr';
+      sublabel = '1h / 3h';
       color = '#4ecca3';
       break;
     case ACTIONS.HOUR_MINUS:
       label = 'H−';
-      sublabel = '1 hr';
+      sublabel = '1h / 3h';
       color = '#ff6b6b';
       break;
     case ACTIONS.MIN_PLUS:
