@@ -155,11 +155,20 @@ function updateCityDisplay(context) {
   canvas.height = 144;
   const ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = isDay ? '#f0f0f0' : '#1a1a2e';
+  // Gradient background
+  const grad = ctx.createLinearGradient(0, 0, 0, 144);
+  if (isDay) {
+    grad.addColorStop(0, '#4a90d9');
+    grad.addColorStop(1, '#f5a623');
+  } else {
+    grad.addColorStop(0, '#0d1b2a');
+    grad.addColorStop(1, '#1b2838');
+  }
+  ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 144, 144);
 
   // City label
-  ctx.fillStyle = isDay ? '#333333' : '#ffffff';
+  ctx.fillStyle = isDay ? '#ffffff' : '#8899aa';
   ctx.font = 'bold 22px Arial';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -167,12 +176,12 @@ function updateCityDisplay(context) {
 
   // Time with AM/PM
   ctx.font = 'bold 32px Arial';
-  ctx.fillStyle = isDay ? '#0066cc' : '#00d4ff';
+  ctx.fillStyle = isDay ? '#fff8e1' : '#64ffda';
   ctx.fillText(timeStr, 72, 68);
 
   // Date
-  ctx.font = '16px Arial';
-  ctx.fillStyle = isDay ? '#666666' : '#888888';
+  ctx.font = 'bold 16px Arial';
+  ctx.fillStyle = isDay ? '#ffe082' : '#5c7a99';
   ctx.fillText(dateStr, 72, 100);
 
   // Offset indicator when exploring
@@ -184,7 +193,7 @@ function updateCityDisplay(context) {
     if (offsetMins > 0) offsetStr += offsetMins + 'm';
 
     ctx.font = 'bold 16px Arial';
-    ctx.fillStyle = isDay ? '#cc3333' : '#ff6b6b';
+    ctx.fillStyle = isDay ? '#ffffff' : '#ff6b6b';
     ctx.fillText(offsetStr, 72, 130);
   }
 
