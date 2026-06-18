@@ -131,38 +131,89 @@ function renderControl(id) {
   ctx.fillStyle = "#1a1a2e";
   ctx.fillRect(0, 0, 144, 144);
 
-  let label, sublabel, color;
+  if (entry.uuid === "com.nirrotem.worldclock.reset") {
+    let color, sublabel;
+    if (autoResetDisabled) {
+      color = "#ff6b6b";
+      sublabel = "LOCKED";
+    } else if (globalOffsetMinutes !== 0) {
+      color = "#ffd93d";
+      sublabel = "RESET";
+    } else {
+      color = "#666666";
+      sublabel = "RESET";
+    }
 
-  switch (entry.uuid) {
-    case "com.nirrotem.worldclock.hour-plus":
-      label = "H+"; sublabel = "1h / 3h"; color = "#4ecca3"; break;
-    case "com.nirrotem.worldclock.hour-minus":
-      label = "H-"; sublabel = "1h / 3h"; color = "#ff6b6b"; break;
-    case "com.nirrotem.worldclock.min-plus":
-      label = "M+"; sublabel = "1m / 15m"; color = "#4ecca3"; break;
-    case "com.nirrotem.worldclock.min-minus":
-      label = "M-"; sublabel = "1m / 15m"; color = "#ff6b6b"; break;
-    case "com.nirrotem.worldclock.reset":
-      label = "RST";
-      sublabel = autoResetDisabled ? "LOCKED" : "RESET";
-      color = autoResetDisabled ? "#ff6b6b" : (globalOffsetMinutes === 0 ? "#555" : "#ffd93d");
-      break;
-    default: return;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 4;
+    ctx.strokeRect(8, 8, 128, 128);
+
+    // Draw circular arrow
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.arc(72, 58, 24, -Math.PI * 0.8, Math.PI * 0.6);
+    ctx.stroke();
+
+    // Arrowhead
+    const tipX = 72 + 24 * Math.cos(Math.PI * 0.6);
+    const tipY = 58 + 24 * Math.sin(Math.PI * 0.6);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(tipX - 10, tipY - 6);
+    ctx.lineTo(tipX + 4, tipY - 2);
+    ctx.lineTo(tipX - 4, tipY + 10);
+    ctx.closePath();
+    ctx.fill();
+
+    // X mark over arrow when locked
+    if (autoResetDisabled) {
+      ctx.strokeStyle = "#ff6b6b";
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(56, 42);
+      ctx.lineTo(88, 74);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(88, 42);
+      ctx.lineTo(56, 74);
+      ctx.stroke();
+    }
+
+    ctx.font = "bold 16px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = color;
+    ctx.fillText(sublabel, 72, 110);
+  } else {
+    let label, sublabel, color;
+
+    switch (entry.uuid) {
+      case "com.nirrotem.worldclock.hour-plus":
+        label = "H+"; sublabel = "1h / 3h"; color = "#4ecca3"; break;
+      case "com.nirrotem.worldclock.hour-minus":
+        label = "H-"; sublabel = "1h / 3h"; color = "#ff6b6b"; break;
+      case "com.nirrotem.worldclock.min-plus":
+        label = "M+"; sublabel = "1m / 15m"; color = "#4ecca3"; break;
+      case "com.nirrotem.worldclock.min-minus":
+        label = "M-"; sublabel = "1m / 15m"; color = "#ff6b6b"; break;
+      default: return;
+    }
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 4;
+    ctx.strokeRect(8, 8, 128, 128);
+
+    ctx.fillStyle = color;
+    ctx.font = "bold 42px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(label, 72, 60);
+
+    ctx.font = "20px Arial";
+    ctx.fillStyle = "#aaaaaa";
+    ctx.fillText(sublabel, 72, 110);
   }
-
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 4;
-  ctx.strokeRect(8, 8, 128, 128);
-
-  ctx.fillStyle = color;
-  ctx.font = "bold 42px Arial";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(label, 72, 60);
-
-  ctx.font = "20px Arial";
-  ctx.fillStyle = "#aaaaaa";
-  ctx.fillText(sublabel, 72, 110);
 
   const imageData = "data:image/png;base64," + canvas.toBuffer("image/png").toString("base64");
   entry.action.setImage(imageData).catch(() => {});
