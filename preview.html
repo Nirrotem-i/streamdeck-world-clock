@@ -132,21 +132,28 @@
         day: 'numeric'
       });
 
-      ctx.fillStyle = globalOffsetMinutes === 0 ? '#1a1a2e' : '#2d1b4e';
+      const hour = parseInt(now.toLocaleTimeString('en-US', {
+        timeZone: city.timezone,
+        hour: 'numeric',
+        hour12: false
+      }));
+      const isDay = hour >= 6 && hour < 20;
+
+      ctx.fillStyle = isDay ? '#f0f0f0' : '#1a1a2e';
       ctx.fillRect(0, 0, 144, 144);
 
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = isDay ? '#333333' : '#ffffff';
       ctx.font = 'bold 22px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(city.label, 72, 28);
 
       ctx.font = 'bold 32px Arial';
-      ctx.fillStyle = globalOffsetMinutes === 0 ? '#00d4ff' : '#ff9f43';
+      ctx.fillStyle = isDay ? '#0066cc' : '#00d4ff';
       ctx.fillText(timeStr, 72, 68);
 
       ctx.font = '16px Arial';
-      ctx.fillStyle = '#888888';
+      ctx.fillStyle = isDay ? '#666666' : '#888888';
       ctx.fillText(dateStr, 72, 100);
 
       if (globalOffsetMinutes !== 0) {
@@ -157,7 +164,7 @@
         if (offsetMins > 0) offsetStr += offsetMins + 'm';
 
         ctx.font = 'bold 16px Arial';
-        ctx.fillStyle = '#ff6b6b';
+        ctx.fillStyle = isDay ? '#cc3333' : '#ff6b6b';
         ctx.fillText(offsetStr, 72, 130);
       }
     }

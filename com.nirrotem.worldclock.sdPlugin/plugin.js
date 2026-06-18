@@ -143,16 +143,23 @@ function updateCityDisplay(context) {
     day: 'numeric'
   });
 
+  const hour = parseInt(now.toLocaleTimeString('en-US', {
+    timeZone: city.timezone,
+    hour: 'numeric',
+    hour12: false
+  }));
+  const isDay = hour >= 6 && hour < 20;
+
   const canvas = document.createElement('canvas');
   canvas.width = 144;
   canvas.height = 144;
   const ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = globalOffsetMinutes === 0 ? '#1a1a2e' : '#2d1b4e';
+  ctx.fillStyle = isDay ? '#f0f0f0' : '#1a1a2e';
   ctx.fillRect(0, 0, 144, 144);
 
   // City label
-  ctx.fillStyle = '#ffffff';
+  ctx.fillStyle = isDay ? '#333333' : '#ffffff';
   ctx.font = 'bold 22px Arial';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -160,12 +167,12 @@ function updateCityDisplay(context) {
 
   // Time with AM/PM
   ctx.font = 'bold 32px Arial';
-  ctx.fillStyle = globalOffsetMinutes === 0 ? '#00d4ff' : '#ff9f43';
+  ctx.fillStyle = isDay ? '#0066cc' : '#00d4ff';
   ctx.fillText(timeStr, 72, 68);
 
   // Date
   ctx.font = '16px Arial';
-  ctx.fillStyle = '#888888';
+  ctx.fillStyle = isDay ? '#666666' : '#888888';
   ctx.fillText(dateStr, 72, 100);
 
   // Offset indicator when exploring
@@ -177,7 +184,7 @@ function updateCityDisplay(context) {
     if (offsetMins > 0) offsetStr += offsetMins + 'm';
 
     ctx.font = 'bold 16px Arial';
-    ctx.fillStyle = '#ff6b6b';
+    ctx.fillStyle = isDay ? '#cc3333' : '#ff6b6b';
     ctx.fillText(offsetStr, 72, 130);
   }
 
