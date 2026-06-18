@@ -4,84 +4,250 @@
   <meta charset="utf-8" />
   <title>City Clock Settings</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 12px;
       color: #d8d8d8;
       background: #2d2d2d;
-      margin: 0;
       padding: 12px;
     }
-    .sdpi-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
     .sdpi-item {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+      margin-bottom: 12px;
     }
     label {
+      display: block;
       font-weight: 600;
       color: #9e9e9e;
       text-transform: uppercase;
       font-size: 10px;
       letter-spacing: 0.5px;
+      margin-bottom: 4px;
     }
-    input, select {
+    input[type="text"] {
+      width: 100%;
       background: #3b3b3b;
       border: 1px solid #555;
       border-radius: 4px;
       color: #fff;
-      padding: 6px 8px;
-      font-size: 12px;
+      padding: 8px 10px;
+      font-size: 13px;
     }
-    input:focus, select:focus {
+    input[type="text"]:focus {
       outline: none;
       border-color: #0078d4;
     }
+    .selected-tz {
+      background: #3b3b3b;
+      border: 1px solid #555;
+      border-radius: 4px;
+      padding: 8px 10px;
+      font-size: 13px;
+      color: #00d4ff;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .selected-tz .change-btn {
+      background: #555;
+      border: none;
+      color: #ddd;
+      padding: 3px 8px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .selected-tz .change-btn:hover {
+      background: #0078d4;
+      color: #fff;
+    }
+    .search-container {
+      position: relative;
+      margin-bottom: 8px;
+    }
+    .search-container input {
+      width: 100%;
+      background: #3b3b3b;
+      border: 1px solid #555;
+      border-radius: 4px;
+      color: #fff;
+      padding: 8px 10px 8px 30px;
+      font-size: 13px;
+    }
+    .search-container input:focus {
+      outline: none;
+      border-color: #0078d4;
+    }
+    .search-container::before {
+      content: "🔍";
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      opacity: 0.5;
+    }
+    .tz-table-container {
+      max-height: 320px;
+      overflow-y: auto;
+      border: 1px solid #444;
+      border-radius: 4px;
+      background: #333;
+    }
+    .tz-table-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    .tz-table-container::-webkit-scrollbar-thumb {
+      background: #666;
+      border-radius: 3px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table th {
+      position: sticky;
+      top: 0;
+      background: #2a2a2a;
+      padding: 6px 10px;
+      text-align: left;
+      font-size: 10px;
+      text-transform: uppercase;
+      color: #888;
+      border-bottom: 1px solid #444;
+    }
+    table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #3a3a3a;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    table tr:hover td {
+      background: #0078d4;
+      color: #fff;
+    }
+    table tr.selected td {
+      background: #005a9e;
+      color: #fff;
+    }
+    .city-name { color: #eee; }
+    .tz-id { color: #888; font-size: 11px; }
+    .tz-offset { color: #aaa; font-size: 11px; }
+    .no-results {
+      padding: 20px;
+      text-align: center;
+      color: #666;
+    }
+    .picker-hidden { display: none; }
   </style>
 </head>
 <body>
-  <div class="sdpi-wrapper">
-    <div class="sdpi-item">
-      <label for="label">Display Name</label>
-      <input type="text" id="label" placeholder="e.g. NYC, TLV, LON" maxlength="6" />
+  <div class="sdpi-item">
+    <label for="label">Display Name (max 6 chars)</label>
+    <input type="text" id="label" placeholder="e.g. NYC, TLV, LON" maxlength="6" />
+  </div>
+
+  <div class="sdpi-item">
+    <label>Timezone</label>
+    <div class="selected-tz" id="selected-display">
+      <span id="selected-name">America/New_York</span>
+      <button class="change-btn" id="change-btn">Change</button>
     </div>
-    <div class="sdpi-item">
-      <label for="timezone">Timezone</label>
-      <select id="timezone">
-        <option value="Pacific/Auckland">Auckland (NZST)</option>
-        <option value="Australia/Sydney">Sydney (AEST)</option>
-        <option value="Asia/Tokyo">Tokyo (JST)</option>
-        <option value="Asia/Shanghai">Shanghai (CST)</option>
-        <option value="Asia/Kolkata">Mumbai (IST)</option>
-        <option value="Asia/Dubai">Dubai (GST)</option>
-        <option value="Asia/Jerusalem">Jerusalem (IST)</option>
-        <option value="Europe/Moscow">Moscow (MSK)</option>
-        <option value="Europe/Athens">Athens (EET)</option>
-        <option value="Europe/Berlin">Berlin (CET)</option>
-        <option value="Europe/Paris">Paris (CET)</option>
-        <option value="Europe/London">London (GMT)</option>
-        <option value="America/Sao_Paulo">Sao Paulo (BRT)</option>
-        <option value="America/New_York" selected>New York (EST)</option>
-        <option value="America/Chicago">Chicago (CST)</option>
-        <option value="America/Denver">Denver (MST)</option>
-        <option value="America/Los_Angeles">Los Angeles (PST)</option>
-        <option value="Pacific/Honolulu">Honolulu (HST)</option>
-      </select>
+
+    <div id="picker" class="picker-hidden">
+      <div class="search-container">
+        <input type="text" id="search" placeholder="Search city or timezone..." autocomplete="off" />
+      </div>
+      <div class="tz-table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>City</th>
+              <th>Timezone</th>
+              <th>UTC</th>
+            </tr>
+          </thead>
+          <tbody id="tz-list"></tbody>
+        </table>
+        <div class="no-results picker-hidden" id="no-results">No timezones found</div>
+      </div>
     </div>
   </div>
 
   <script>
     let websocket = null;
     let uuid = null;
-    let actionInfo = {};
+    let selectedTimezone = 'America/New_York';
+
+    const TIMEZONES = Intl.supportedValuesOf('timeZone');
+
+    function getUtcOffset(tz) {
+      try {
+        const now = new Date();
+        const str = now.toLocaleString('en-US', { timeZone: tz, timeZoneName: 'shortOffset' });
+        const match = str.match(/GMT([+-]\d{1,2}(?::\d{2})?)/);
+        if (match) return 'UTC' + match[1];
+        const parts = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'shortOffset' }).formatToParts(now);
+        const tzPart = parts.find(p => p.type === 'timeZoneName');
+        if (tzPart) return tzPart.value;
+      } catch (e) {}
+      return '';
+    }
+
+    function getCityName(tz) {
+      const parts = tz.split('/');
+      return parts[parts.length - 1].replace(/_/g, ' ');
+    }
+
+    function buildTable(filter) {
+      const tbody = document.getElementById('tz-list');
+      const noResults = document.getElementById('no-results');
+      const lowerFilter = (filter || '').toLowerCase();
+
+      const filtered = TIMEZONES.filter(tz => {
+        if (!lowerFilter) return true;
+        const city = getCityName(tz).toLowerCase();
+        const full = tz.toLowerCase().replace(/_/g, ' ');
+        return city.includes(lowerFilter) || full.includes(lowerFilter);
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        noResults.classList.remove('picker-hidden');
+        return;
+      }
+
+      noResults.classList.add('picker-hidden');
+
+      tbody.innerHTML = filtered.map(tz => {
+        const city = getCityName(tz);
+        const offset = getUtcOffset(tz);
+        const isSelected = tz === selectedTimezone ? ' class="selected"' : '';
+        return `<tr${isSelected} data-tz="${tz}">
+          <td class="city-name">${city}</td>
+          <td class="tz-id">${tz}</td>
+          <td class="tz-offset">${offset}</td>
+        </tr>`;
+      }).join('');
+
+      tbody.querySelectorAll('tr').forEach(row => {
+        row.addEventListener('click', () => {
+          selectTimezone(row.dataset.tz);
+        });
+      });
+    }
+
+    function selectTimezone(tz) {
+      selectedTimezone = tz;
+      document.getElementById('selected-name').textContent = tz;
+      document.getElementById('picker').classList.add('picker-hidden');
+      document.getElementById('search').value = '';
+      saveSettings();
+    }
 
     function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
       uuid = inUUID;
-      actionInfo = JSON.parse(inActionInfo);
 
       websocket = new WebSocket('ws://127.0.0.1:' + inPort);
 
@@ -95,12 +261,27 @@
         if (msg.event === 'didReceiveSettings') {
           const settings = msg.payload.settings || {};
           if (settings.label) document.getElementById('label').value = settings.label;
-          if (settings.timezone) document.getElementById('timezone').value = settings.timezone;
+          if (settings.timezone) {
+            selectedTimezone = settings.timezone;
+            document.getElementById('selected-name').textContent = settings.timezone;
+          }
         }
       };
 
       document.getElementById('label').addEventListener('input', saveSettings);
-      document.getElementById('timezone').addEventListener('change', saveSettings);
+
+      document.getElementById('change-btn').addEventListener('click', () => {
+        const picker = document.getElementById('picker');
+        picker.classList.toggle('picker-hidden');
+        if (!picker.classList.contains('picker-hidden')) {
+          buildTable('');
+          document.getElementById('search').focus();
+        }
+      });
+
+      document.getElementById('search').addEventListener('input', (e) => {
+        buildTable(e.target.value);
+      });
     }
 
     function requestSettings() {
@@ -113,7 +294,7 @@
     function saveSettings() {
       const payload = {
         label: document.getElementById('label').value || 'NYC',
-        timezone: document.getElementById('timezone').value || 'America/New_York'
+        timezone: selectedTimezone
       };
 
       websocket.send(JSON.stringify({
