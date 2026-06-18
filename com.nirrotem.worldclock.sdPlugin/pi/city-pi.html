@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>City Clock Settings</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 12px;
+      color: #d8d8d8;
+      background: #2d2d2d;
+      margin: 0;
+      padding: 12px;
+    }
+    .sdpi-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .sdpi-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    label {
+      font-weight: 600;
+      color: #9e9e9e;
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+    }
+    input, select {
+      background: #3b3b3b;
+      border: 1px solid #555;
+      border-radius: 4px;
+      color: #fff;
+      padding: 6px 8px;
+      font-size: 12px;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #0078d4;
+    }
+  </style>
+</head>
+<body>
+  <div class="sdpi-wrapper">
+    <div class="sdpi-item">
+      <label for="label">Display Name</label>
+      <input type="text" id="label" placeholder="e.g. NYC, TLV, LON" maxlength="6" />
+    </div>
+    <div class="sdpi-item">
+      <label for="timezone">Timezone</label>
+      <select id="timezone">
+        <option value="Pacific/Auckland">Auckland (NZST)</option>
+        <option value="Australia/Sydney">Sydney (AEST)</option>
+        <option value="Asia/Tokyo">Tokyo (JST)</option>
+        <option value="Asia/Shanghai">Shanghai (CST)</option>
+        <option value="Asia/Kolkata">Mumbai (IST)</option>
+        <option value="Asia/Dubai">Dubai (GST)</option>
+        <option value="Asia/Jerusalem">Jerusalem (IST)</option>
+        <option value="Europe/Moscow">Moscow (MSK)</option>
+        <option value="Europe/Athens">Athens (EET)</option>
+        <option value="Europe/Berlin">Berlin (CET)</option>
+        <option value="Europe/Paris">Paris (CET)</option>
+        <option value="Europe/London">London (GMT)</option>
+        <option value="America/Sao_Paulo">Sao Paulo (BRT)</option>
+        <option value="America/New_York" selected>New York (EST)</option>
+        <option value="America/Chicago">Chicago (CST)</option>
+        <option value="America/Denver">Denver (MST)</option>
+        <option value="America/Los_Angeles">Los Angeles (PST)</option>
+        <option value="Pacific/Honolulu">Honolulu (HST)</option>
+      </select>
+    </div>
+  </div>
+
+  <script>
+    let websocket = null;
+    let uuid = null;
+    let actionInfo = {};
+
+    function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
+      uuid = inUUID;
+      actionInfo = JSON.parse(inActionInfo);
+
+      websocket = new WebSocket('ws://127.0.0.1:' + inPort);
+
+      websocket.onopen = function () {
+        websocket.send(JSON.stringify({ event: inRegisterEvent, uuid: inUUID }));
+        requestSettings();
+      };
+
+      websocket.onmessage = function (evt) {
+        const msg = JSON.parse(evt.data);
+        if (msg.event === 'didReceiveSettings') {
+          const settings = msg.payload.settings || {};
+          if (settings.label) document.getElementById('label').value = settings.label;
+          if (settings.timezone) document.getElementById('timezone').value = settings.timezone;
+        }
+      };
+
+      document.getElementById('label').addEventListener('input', saveSettings);
+      document.getElementById('timezone').addEventListener('change', saveSettings);
+    }
+
+    function requestSettings() {
+      websocket.send(JSON.stringify({
+        event: 'getSettings',
+        context: uuid
+      }));
+    }
+
+    function saveSettings() {
+      const payload = {
+        label: document.getElementById('label').value || 'NYC',
+        timezone: document.getElementById('timezone').value || 'America/New_York'
+      };
+
+      websocket.send(JSON.stringify({
+        event: 'setSettings',
+        context: uuid,
+        payload: payload
+      }));
+    }
+  </script>
+</body>
+</html>

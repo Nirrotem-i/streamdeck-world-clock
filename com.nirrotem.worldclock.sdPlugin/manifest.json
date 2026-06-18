@@ -1,0 +1,64 @@
+{
+  "SDKVersion": 2,
+  "Author": "Nir Rotem",
+  "CodePath": "plugin.html",
+  "Description": "World Clock with timezone explorer. View multiple timezones and shift time to compare across cities.",
+  "Name": "World Clock",
+  "Version": "1.0.0",
+  "OS": [
+    { "Platform": "mac", "MinimumVersion": "10.15" },
+    { "Platform": "windows", "MinimumVersion": "10" }
+  ],
+  "Software": {
+    "MinimumVersion": "6.4"
+  },
+  "Category": "World Clock",
+  "CategoryIcon": "imgs/category-icon",
+  "Icon": "imgs/plugin-icon",
+  "URL": "https://github.com/nirrotem/streamdeck-world-clock",
+  "Actions": [
+    {
+      "Icon": "imgs/clock-icon",
+      "Name": "City Clock",
+      "States": [{ "Image": "imgs/clock-icon" }],
+      "Tooltip": "Displays the current time in a chosen timezone",
+      "UUID": "com.nirrotem.worldclock.city",
+      "PropertyInspectorPath": "pi/city-pi.html"
+    },
+    {
+      "Icon": "imgs/hour-plus-icon",
+      "Name": "Hour +",
+      "States": [{ "Image": "imgs/hour-plus-icon" }],
+      "Tooltip": "Shift all clocks forward by 1 hour",
+      "UUID": "com.nirrotem.worldclock.hour-plus"
+    },
+    {
+      "Icon": "imgs/hour-minus-icon",
+      "Name": "Hour -",
+      "States": [{ "Image": "imgs/hour-minus-icon" }],
+      "Tooltip": "Shift all clocks back by 1 hour",
+      "UUID": "com.nirrotem.worldclock.hour-minus"
+    },
+    {
+      "Icon": "imgs/min-plus-icon",
+      "Name": "Min +",
+      "States": [{ "Image": "imgs/min-plus-icon" }],
+      "Tooltip": "Shift all clocks forward by 15 minutes",
+      "UUID": "com.nirrotem.worldclock.min-plus"
+    },
+    {
+      "Icon": "imgs/min-minus-icon",
+      "Name": "Min -",
+      "States": [{ "Image": "imgs/min-minus-icon" }],
+      "Tooltip": "Shift all clocks back by 15 minutes",
+      "UUID": "com.nirrotem.worldclock.min-minus"
+    },
+    {
+      "Icon": "imgs/reset-icon",
+      "Name": "Reset",
+      "States": [{ "Image": "imgs/reset-icon" }],
+      "Tooltip": "Reset all clocks to current real time",
+      "UUID": "com.nirrotem.worldclock.reset"
+    }
+  ]
+}
