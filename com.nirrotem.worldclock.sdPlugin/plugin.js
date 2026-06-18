@@ -5,6 +5,9 @@ let controlContexts = {};
 let updateInterval = null;
 let keyDownTimers = {};
 const LONG_PRESS_MS = 500;
+const AUTO_RESET_MS = 60000;
+let autoResetTimer = null;
+let autoResetDisabled = false;
 
 const ACTIONS = {
   CITY: 'com.nirrotem.worldclock.city',
@@ -95,8 +98,21 @@ function handleKeyDown(action, context) {
       }
     }, LONG_PRESS_MS);
   } else if (action === ACTIONS.RESET) {
-    globalOffsetMinutes = 0;
-    updateAllDisplays();
+    keyDownTimers[context] = { action, time: Date.now(), fired: false };
+    setTimeout(() => {
+      const entry = keyDownTimers[context];
+      if (entry && !entry.fired) {
+        entry.fired = true;
+        autoResetDisabled = !autoResetDisabled;
+        if (autoResetDisabled) {
+          clearTimeout(autoResetTimer);
+          autoResetTimer = null;
+        } else {
+          scheduleAutoReset();
+        }
+        updateAllDisplays();
+      }
+    }, LONG_PRESS_MS);
   }
 }
 
@@ -108,9 +124,27 @@ function handleKeyUp(action, context) {
     else if (action === ACTIONS.MIN_MINUS) globalOffsetMinutes -= 1;
     else if (action === ACTIONS.HOUR_PLUS) globalOffsetMinutes += 60;
     else if (action === ACTIONS.HOUR_MINUS) globalOffsetMinutes -= 60;
+    else if (action === ACTIONS.RESET) {
+      globalOffsetMinutes = 0;
+      autoResetDisabled = false;
+      clearTimeout(autoResetTimer);
+      autoResetTimer = null;
+    }
     updateAllDisplays();
   }
   delete keyDownTimers[context];
+}
+
+function scheduleAutoReset() {
+  if (autoResetDisabled) return;
+  clearTimeout(autoResetTimer);
+  if (globalOffsetMinutes !== 0) {
+    autoResetTimer = setTimeout(() => {
+      globalOffsetMinutes = 0;
+      autoResetTimer = null;
+      updateAllDisplays();
+    }, AUTO_RESET_MS);
+  }
 }
 
 function startUpdateLoop() {
@@ -119,6 +153,7 @@ function startUpdateLoop() {
 }
 
 function updateAllDisplays() {
+  scheduleAutoReset();
   for (const context of Object.keys(cityContexts)) {
     updateCityDisplay(context);
   }
@@ -261,8 +296,8 @@ function updateControlDisplay(context, action) {
       break;
     case ACTIONS.RESET:
       label = '↺';
-      sublabel = 'RESET';
-      color = globalOffsetMinutes === 0 ? '#555' : '#ffd93d';
+      sublabel = autoResetDisabled ? 'LOCKED' : 'RESET';
+      color = autoResetDisabled ? '#ff6b6b' : (globalOffsetMinutes === 0 ? '#555' : '#ffd93d');
       break;
     default:
       return;

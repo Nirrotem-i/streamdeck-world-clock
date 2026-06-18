@@ -334,6 +334,9 @@
 
   <script>
     let globalOffsetMinutes = 0;
+    let autoResetTimer = null;
+    let autoResetDisabled = false;
+    const AUTO_RESET_MS = 60000;
 
     const cities = [
       { label: 'TLV', timezone: 'Asia/Jerusalem' },
@@ -462,8 +465,8 @@
       renderControl('ctrl-min-plus', 'M+', '1m / 15m', '#4ecca3');
       renderControl('ctrl-min-minus', 'M−', '1m / 15m', '#ff6b6b');
 
-      const resetColor = globalOffsetMinutes === 0 ? '#555' : '#ffd93d';
-      renderControl('ctrl-reset', '↺', 'RESET', resetColor);
+      const resetColor = autoResetDisabled ? '#ff6b6b' : (globalOffsetMinutes === 0 ? '#555' : '#ffd93d');
+      renderControl('ctrl-reset', '↺', autoResetDisabled ? 'LOCKED' : 'RESET', resetColor);
 
       const display = document.getElementById('offset-display');
       if (globalOffsetMinutes === 0) {
@@ -493,6 +496,7 @@
         timer = setTimeout(() => {
           fired = true;
           globalOffsetMinutes += longDelta;
+          scheduleAutoReset();
           updateAll();
         }, LONG_PRESS_MS);
       });
@@ -501,6 +505,7 @@
         clearTimeout(timer);
         if (!fired) {
           globalOffsetMinutes += shortDelta;
+          scheduleAutoReset();
           updateAll();
         }
       });
@@ -515,10 +520,54 @@
     setupLongPressButton('ctrl-min-plus', 1, 15);
     setupLongPressButton('ctrl-min-minus', -1, -15);
 
-    document.getElementById('ctrl-reset').parentElement.addEventListener('click', () => {
-      globalOffsetMinutes = 0;
-      updateAll();
-    });
+    // Reset button: tap = reset, hold = toggle auto-reset lock
+    (function () {
+      const el = document.getElementById('ctrl-reset').parentElement;
+      let timer = null;
+      let fired = false;
+
+      el.addEventListener('mousedown', () => {
+        fired = false;
+        timer = setTimeout(() => {
+          fired = true;
+          autoResetDisabled = !autoResetDisabled;
+          if (autoResetDisabled) {
+            clearTimeout(autoResetTimer);
+            autoResetTimer = null;
+          } else {
+            scheduleAutoReset();
+          }
+          updateAll();
+        }, LONG_PRESS_MS);
+      });
+
+      el.addEventListener('mouseup', () => {
+        clearTimeout(timer);
+        if (!fired) {
+          globalOffsetMinutes = 0;
+          autoResetDisabled = false;
+          clearTimeout(autoResetTimer);
+          autoResetTimer = null;
+          updateAll();
+        }
+      });
+
+      el.addEventListener('mouseleave', () => {
+        clearTimeout(timer);
+      });
+    })();
+
+    function scheduleAutoReset() {
+      if (autoResetDisabled) return;
+      clearTimeout(autoResetTimer);
+      if (globalOffsetMinutes !== 0) {
+        autoResetTimer = setTimeout(() => {
+          globalOffsetMinutes = 0;
+          autoResetTimer = null;
+          updateAll();
+        }, AUTO_RESET_MS);
+      }
+    }
 
     updateAll();
     setInterval(updateAll, 1000);
