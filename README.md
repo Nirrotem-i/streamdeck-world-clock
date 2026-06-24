@@ -2,13 +2,11 @@
 
 Explore time across the globe — shift hours and minutes to compare timezones instantly from your Stream Deck.
 
-![TimeShift Hero](media/01-hero.png)
+![TimeShift Hero](media/01-hero.svg)
 
-![Features](media/02-features.png)
+![Features](media/02-features.svg)
 
-![Time Shift Demo](media/03-time-shift-demo.png)
-
-![Settings UI](media/04-settings-ui.png)
+![Time Shift Demo](media/03-time-shift-demo.svg)
 
 ## Features
 

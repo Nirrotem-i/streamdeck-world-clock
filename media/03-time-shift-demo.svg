@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400">
+  <rect width="1200" height="400" fill="#0d0d1a"/>
+
+  <text x="600" y="45" text-anchor="middle" font-family="SF Pro Display, -apple-system, Arial, sans-serif" font-size="28" font-weight="700" fill="#ffffff">Time Shift in Action</text>
+  <text x="600" y="72" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#888">"What time will it be in 3 hours?"</text>
+
+  <!-- BEFORE state -->
+  <text x="250" y="110" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#666">Current Time</text>
+
+  <!-- Before clocks -->
+  <rect x="70" y="130" width="120" height="120" rx="10" fill="#1a1a2e"/>
+  <circle cx="85" cy="143" r="5" fill="#ffd93d"/>
+  <text x="130" y="154" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">NYC</text>
+  <text x="130" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#ff9f43">02:34 PM</text>
+  <text x="130" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ffffff">Jun 24</text>
+
+  <rect x="210" y="130" width="120" height="120" rx="10" fill="#1a1a2e"/>
+  <circle cx="225" cy="143" r="5" fill="#ffd93d"/>
+  <text x="270" y="154" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">LON</text>
+  <text x="270" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#ff9f43">07:34 PM</text>
+  <text x="270" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ffffff">Jun 24</text>
+
+  <rect x="350" y="130" width="120" height="120" rx="10" fill="#1a1a2e"/>
+  <circle cx="365" cy="143" r="6" fill="#aabbdd"/>
+  <circle cx="369" cy="140" r="5" fill="#1a1a2e"/>
+  <text x="410" y="154" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">TKY</text>
+  <text x="410" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#00d4ff">03:34 AM</text>
+  <text x="410" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ffffff">Jun 25</text>
+
+  <!-- Arrow -->
+  <text x="560" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" fill="#4ecca3">→</text>
+  <text x="560" y="225" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#4ecca3">Press H+ three times</text>
+  <text x="560" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#888">(+3 hours)</text>
+
+  <!-- AFTER state -->
+  <text x="890" y="110" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#4ecca3">After Shift (+3h)</text>
+
+  <!-- After clocks -->
+  <rect x="710" y="130" width="120" height="120" rx="10" fill="#1a1a2e"/>
+  <circle cx="725" cy="143" r="5" fill="#ffd93d"/>
+  <text x="770" y="154" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">NYC</text>
+  <text x="770" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#ff9f43">05:34 PM</text>
+  <text x="770" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ffffff">Jun 24</text>
+  <text x="770" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#ff6b6b">+3h</text>
+
+  <rect x="850" y="130" width="120" height="120" rx="10" fill="#1a1a2e"/>
+  <circle cx="865" cy="143" r="5" fill="#ffd93d"/>
+  <text x="910" y="154" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">LON</text>
+  <text x="910" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#ff9f43">10:34 PM</text>
+  <text x="910" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ffffff">Jun 24</text>
+  <text x="910" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#ff6b6b">+3h</text>
+
+  <rect x="990" y="130" width="120" height="120" rx="10" fill="#1a1a2e"/>
+  <circle cx="1005" cy="143" r="6" fill="#aabbdd"/>
+  <circle cx="1009" cy="140" r="5" fill="#1a1a2e"/>
+  <text x="1050" y="154" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">TKY</text>
+  <text x="1050" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#00d4ff">06:34 AM</text>
+  <text x="1050" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ffffff">Jun 25</text>
+  <text x="1050" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#ff6b6b">+3h</text>
+
+  <!-- Bottom use cases -->
+  <rect x="80" y="290" width="1040" height="90" rx="12" fill="#12122a" stroke="#2a2a4e" stroke-width="1"/>
+  <text x="600" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="600" fill="#ffffff">Perfect For</text>
+  <text x="220" y="355" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#00d4ff">🌍 Remote Teams</text>
+  <text x="440" y="355" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#4ecca3">📈 Trading Hours</text>
+  <text x="660" y="355" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ff9f43">✈️ Travel Planning</text>
+  <text x="880" y="355" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ffd93d">👨‍👩‍👧 Family Abroad</text>
+</svg>
