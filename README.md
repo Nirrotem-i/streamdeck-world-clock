@@ -2,6 +2,14 @@
 
 Explore time across the globe — shift hours and minutes to compare timezones instantly from your Stream Deck.
 
+![TimeShift Hero](media/01-hero.png)
+
+![Features](media/02-features.png)
+
+![Time Shift Demo](media/03-time-shift-demo.png)
+
+![Settings UI](media/04-settings-ui.png)
+
 ## Features
 
 - **City Clock tiles** — Add as many as you want, each configurable to any timezone
@@ -90,7 +98,7 @@ Open these files in a browser to test without hardware:
 ```
 com.nirrotem.worldclock.sdPlugin/
   manifest.json        — Plugin manifest (actions, icons, metadata)
-  src/plugin.js        — Main plugin logic (Node.js, SDK 6, canvas rendering)
+  src/plugin.js        — Main plugin logic (Node.js, SDK 6, SVG rendering)
   pi/city-pi.html      — Property Inspector (timezone picker UI)
   imgs/                — Action icons (PNG + SVG)
   package.json         — Node.js dependencies
@@ -115,6 +123,7 @@ python3 generate-icons.py
 
 ## Version History
 
+- **2.1.0** — Fix Marketplace rejection: replace native canvas with SVG rendering, white icons, remove external CSS dependency, add error handling for invalid timezones
 - **2.0.0** — Migrate to Stream Deck SDK 6 (Node.js) for Marketplace compatibility
 - **1.0.2** — Fix encoding on minus buttons, add UTC timezone, remove 3rd column from picker
 - **1.0.1** — Add day/night icons, colored time, date display, long-press controls, auto-reset
