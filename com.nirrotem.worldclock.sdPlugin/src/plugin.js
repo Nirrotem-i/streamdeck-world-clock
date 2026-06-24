@@ -1,5 +1,4 @@
 const { streamDeck, SingletonAction } = require("@elgato/streamdeck");
-const { createCanvas } = require("canvas");
 
 let globalOffsetMinutes = 0;
 let autoResetTimer = null;
@@ -33,10 +32,27 @@ function updateAllDisplays() {
   }
 }
 
+function svgToDataUri(svg) {
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+
 function renderCity(id) {
   const entry = cityActions[id];
   if (!entry) return;
 
+  try {
+    return renderCityInner(id, entry);
+  } catch (e) {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144">
+  <rect width="144" height="144" fill="#1a1a2e"/>
+  <text x="72" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#ff6b6b">ERR</text>
+  <text x="72" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#888888">Bad timezone</text>
+</svg>`;
+    entry.action.setImage(svgToDataUri(svg)).catch(() => {});
+  }
+}
+
+function renderCityInner(id, entry) {
   const now = new Date();
   now.setMinutes(now.getMinutes() + globalOffsetMinutes);
 
@@ -60,76 +76,57 @@ function renderCity(id) {
   }));
   const isDay = hour >= 6 && hour < 20;
 
-  const canvas = createCanvas(144, 144);
-  const ctx = canvas.getContext("2d");
+  const timeColor = isDay ? "#ff9f43" : "#00d4ff";
 
-  ctx.fillStyle = "#1a1a2e";
-  ctx.fillRect(0, 0, 144, 144);
-
+  let sunMoon = "";
   if (isDay) {
-    ctx.fillStyle = "#ffd93d";
-    ctx.beginPath();
-    ctx.arc(20, 18, 7, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#ffd93d";
-    ctx.lineWidth = 2;
-    for (let i = 0; i < 8; i++) {
-      const angle = (i * Math.PI) / 4;
-      ctx.beginPath();
-      ctx.moveTo(20 + Math.cos(angle) * 10, 18 + Math.sin(angle) * 10);
-      ctx.lineTo(20 + Math.cos(angle) * 14, 18 + Math.sin(angle) * 14);
-      ctx.stroke();
-    }
+    sunMoon = `
+      <circle cx="20" cy="18" r="7" fill="#ffd93d"/>
+      <line x1="20" y1="4" x2="20" y2="8" stroke="#ffd93d" stroke-width="2" stroke-linecap="round"/>
+      <line x1="20" y1="28" x2="20" y2="32" stroke="#ffd93d" stroke-width="2" stroke-linecap="round"/>
+      <line x1="6" y1="18" x2="10" y2="18" stroke="#ffd93d" stroke-width="2" stroke-linecap="round"/>
+      <line x1="30" y1="18" x2="34" y2="18" stroke="#ffd93d" stroke-width="2" stroke-linecap="round"/>
+      <line x1="10" y1="8" x2="13" y2="11" stroke="#ffd93d" stroke-width="2" stroke-linecap="round"/>
+      <line x1="27" y1="25" x2="30" y2="28" stroke="#ffd93d" stroke-width="2" stroke-linecap="round"/>
+      <line x1="10" y1="28" x2="13" y2="25" stroke="#ffd93d" stroke-width="2" stroke-linecap="round"/>
+      <line x1="27" y1="11" x2="30" y2="8" stroke="#ffd93d" stroke-width="2" stroke-linecap="round"/>`;
   } else {
-    ctx.fillStyle = "#aabbdd";
-    ctx.beginPath();
-    ctx.arc(20, 18, 8, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#1a1a2e";
-    ctx.beginPath();
-    ctx.arc(25, 15, 7, 0, Math.PI * 2);
-    ctx.fill();
+    sunMoon = `
+      <circle cx="20" cy="18" r="8" fill="#aabbdd"/>
+      <circle cx="25" cy="15" r="7" fill="#1a1a2e"/>`;
   }
 
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 22px Arial";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(entry.label, 72, 28);
-
-  ctx.font = "bold 32px Arial";
-  ctx.fillStyle = isDay ? "#ff9f43" : "#00d4ff";
-  ctx.fillText(timeStr, 72, 68);
-
-  ctx.font = "bold 16px Arial";
-  ctx.fillStyle = "#666666";
-  ctx.fillText(dateStr, 72, 100);
-
+  let offsetLabel = "";
   if (globalOffsetMinutes !== 0) {
     const offsetHours = Math.floor(Math.abs(globalOffsetMinutes) / 60);
     const offsetMins = Math.abs(globalOffsetMinutes) % 60;
     const sign = globalOffsetMinutes > 0 ? "+" : "-";
     let offsetStr = sign + offsetHours + "h";
     if (offsetMins > 0) offsetStr += offsetMins + "m";
-
-    ctx.font = "bold 16px Arial";
-    ctx.fillStyle = "#ff6b6b";
-    ctx.fillText(offsetStr, 72, 130);
+    offsetLabel = `<text x="72" y="134" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ff6b6b">${offsetStr}</text>`;
   }
 
-  const imageData = "data:image/png;base64," + canvas.toBuffer("image/png").toString("base64");
-  entry.action.setImage(imageData).catch(() => {});
+  const escapedLabel = entry.label.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const escapedTime = timeStr.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const escapedDate = dateStr.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144">
+  <rect width="144" height="144" fill="#1a1a2e"/>
+  ${sunMoon}
+  <text x="72" y="32" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#ffffff">${escapedLabel}</text>
+  <text x="72" y="74" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="${timeColor}">${escapedTime}</text>
+  <text x="72" y="104" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff">${escapedDate}</text>
+  ${offsetLabel}
+</svg>`;
+
+  entry.action.setImage(svgToDataUri(svg)).catch(() => {});
 }
 
 function renderControl(id) {
   const entry = controlActions[id];
   if (!entry) return;
 
-  const canvas = createCanvas(144, 144);
-  const ctx = canvas.getContext("2d");
-
-  ctx.fillStyle = "#1a1a2e";
-  ctx.fillRect(0, 0, 144, 144);
+  let svg;
 
   if (entry.uuid === "com.nirrotem.worldclock.reset") {
     let color, sublabel;
@@ -144,47 +141,21 @@ function renderControl(id) {
       sublabel = "RESET";
     }
 
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 4;
-    ctx.strokeRect(8, 8, 128, 128);
-
-    // Draw circular arrow
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 5;
-    ctx.beginPath();
-    ctx.arc(72, 58, 24, -Math.PI * 0.8, Math.PI * 0.6);
-    ctx.stroke();
-
-    // Arrowhead
-    const tipX = 72 + 24 * Math.cos(Math.PI * 0.6);
-    const tipY = 58 + 24 * Math.sin(Math.PI * 0.6);
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.moveTo(tipX - 10, tipY - 6);
-    ctx.lineTo(tipX + 4, tipY - 2);
-    ctx.lineTo(tipX - 4, tipY + 10);
-    ctx.closePath();
-    ctx.fill();
-
-    // X mark over arrow when locked
+    let xMark = "";
     if (autoResetDisabled) {
-      ctx.strokeStyle = "#ff6b6b";
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.moveTo(56, 42);
-      ctx.lineTo(88, 74);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(88, 42);
-      ctx.lineTo(56, 74);
-      ctx.stroke();
+      xMark = `
+        <line x1="56" y1="42" x2="88" y2="74" stroke="#ff6b6b" stroke-width="4" stroke-linecap="round"/>
+        <line x1="88" y1="42" x2="56" y2="74" stroke="#ff6b6b" stroke-width="4" stroke-linecap="round"/>`;
     }
 
-    ctx.font = "bold 16px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = color;
-    ctx.fillText(sublabel, 72, 110);
+    svg = `<svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144">
+  <rect width="144" height="144" fill="#1a1a2e"/>
+  <rect x="8" y="8" width="128" height="128" rx="8" fill="none" stroke="${color}" stroke-width="4"/>
+  <path d="M 48 58 A 24 24 0 1 1 72 82" fill="none" stroke="${color}" stroke-width="5" stroke-linecap="round"/>
+  <polygon points="44,50 52,58 40,62" fill="${color}"/>
+  ${xMark}
+  <text x="72" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="${color}">${sublabel}</text>
+</svg>`;
   } else {
     let label, sublabel, color;
 
@@ -192,31 +163,23 @@ function renderControl(id) {
       case "com.nirrotem.worldclock.hour-plus":
         label = "H+"; sublabel = "1h / 3h"; color = "#4ecca3"; break;
       case "com.nirrotem.worldclock.hour-minus":
-        label = "H-"; sublabel = "1h / 3h"; color = "#ff6b6b"; break;
+        label = "H−"; sublabel = "1h / 3h"; color = "#ff6b6b"; break;
       case "com.nirrotem.worldclock.min-plus":
         label = "M+"; sublabel = "1m / 15m"; color = "#4ecca3"; break;
       case "com.nirrotem.worldclock.min-minus":
-        label = "M-"; sublabel = "1m / 15m"; color = "#ff6b6b"; break;
+        label = "M−"; sublabel = "1m / 15m"; color = "#ff6b6b"; break;
       default: return;
     }
 
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 4;
-    ctx.strokeRect(8, 8, 128, 128);
-
-    ctx.fillStyle = color;
-    ctx.font = "bold 42px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(label, 72, 60);
-
-    ctx.font = "20px Arial";
-    ctx.fillStyle = "#aaaaaa";
-    ctx.fillText(sublabel, 72, 110);
+    svg = `<svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144">
+  <rect width="144" height="144" fill="#1a1a2e"/>
+  <rect x="8" y="8" width="128" height="128" rx="8" fill="none" stroke="${color}" stroke-width="4"/>
+  <text x="72" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" font-weight="bold" fill="${color}">${label}</text>
+  <text x="72" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#aaaaaa">${sublabel}</text>
+</svg>`;
   }
 
-  const imageData = "data:image/png;base64," + canvas.toBuffer("image/png").toString("base64");
-  entry.action.setImage(imageData).catch(() => {});
+  entry.action.setImage(svgToDataUri(svg)).catch(() => {});
 }
 
 // --- City Clock Action ---

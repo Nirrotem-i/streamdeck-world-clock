@@ -96,8 +96,7 @@
   "Icon": "imgs/plugin-icon",
   "Name": "TimeShift",
   "Nodejs": {
-    "Version": "20",
-    "Debug": "enabled"
+    "Version": "20"
   },
   "OS": [
     {
@@ -115,5 +114,5 @@
   },
   "URL": "https://github.com/Nirrotem-i/streamdeck-world-clock",
   "UUID": "com.nirrotem.worldclock",
-  "Version": "2.0.2.0"
+  "Version": "2.1.0.0"
 }

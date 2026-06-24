@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>TimeShift - Marketplace Media Generator</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #222;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 20px;
+      color: #fff;
+    }
+    .instructions {
+      max-width: 1920px;
+      margin: 0 auto 20px;
+      padding: 16px;
+      background: #333;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #ccc;
+      line-height: 1.6;
+    }
+    .instructions h2 { color: #00d4ff; margin-bottom: 8px; font-size: 18px; }
+    .instructions code { background: #444; padding: 2px 6px; border-radius: 3px; }
+    .frame {
+      width: 1920px;
+      height: 960px;
+      margin: 0 auto 40px;
+      border: 2px solid #444;
+      position: relative;
+      overflow: hidden;
+    }
+    .frame-label {
+      position: absolute;
+      top: -24px;
+      left: 0;
+      font-size: 12px;
+      color: #888;
+    }
+    .frame-wrapper { position: relative; margin-bottom: 60px; }
+
+    /* --- Frame 1: Hero --- */
+    .hero {
+      background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0d0d2a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 80px;
+      padding: 60px;
+    }
+    .hero-left { text-align: center; }
+    .hero-left h1 {
+      font-size: 72px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #00d4ff, #ff9f43);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+    .hero-left p {
+      font-size: 26px;
+      color: #aaa;
+      max-width: 500px;
+    }
+    .hero-deck {
+      display: grid;
+      grid-template-columns: repeat(5, 120px);
+      gap: 10px;
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+    .hero-deck canvas {
+      width: 120px;
+      height: 120px;
+      border-radius: 8px;
+    }
+    .hero-deck .empty-slot {
+      width: 120px;
+      height: 120px;
+      border-radius: 8px;
+      background: #111;
+    }
+
+    /* --- Frame 2: Features --- */
+    .features {
+      background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 80px;
+    }
+    .feature-card {
+      text-align: center;
+      max-width: 380px;
+    }
+    .feature-card .icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+    .feature-card h3 {
+      font-size: 28px;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    .feature-card p {
+      font-size: 18px;
+      color: #999;
+      line-height: 1.5;
+    }
+
+    /* --- Frame 3: In action --- */
+    .in-action {
+      background: linear-gradient(135deg, #0a0a1a 0%, #151530 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 60px;
+      padding: 60px;
+    }
+    .in-action-deck {
+      display: grid;
+      grid-template-columns: repeat(5, 130px);
+      gap: 10px;
+      background: #111;
+      padding: 24px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+    .in-action-deck canvas {
+      width: 130px;
+      height: 130px;
+      border-radius: 8px;
+    }
+    .in-action-deck .empty-slot {
+      width: 130px;
+      height: 130px;
+      border-radius: 8px;
+      background: #0a0a0a;
+    }
+    .in-action-info {
+      max-width: 420px;
+    }
+    .in-action-info h2 {
+      font-size: 42px;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+    .in-action-info p {
+      font-size: 20px;
+      color: #aaa;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .in-action-info .highlight {
+      color: #00d4ff;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="instructions">
+    <h2>Marketplace Media Generator</h2>
+    <p>Each frame below is exactly <code>1920x960</code> — the required Elgato Marketplace gallery size.</p>
+    <p>To capture: open in Chrome, right-click each frame, select <strong>Inspect</strong>, then in DevTools right-click the element &rarr; <strong>Capture node screenshot</strong>. Or use a screenshot tool at 1:1 scale.</p>
+    <p>The clocks are live and update every second. Recommended: capture Frame 1 as your hero image, Frame 3 showing a time shift in progress (click H+ first).</p>
+  </div>
+
+  <!-- FRAME 1: Hero -->
+  <div class="frame-wrapper">
+    <div class="frame-label">Frame 1 — Hero (1920x960)</div>
+    <div class="frame hero" id="frame-hero">
+      <div class="hero-left">
+        <h1>TimeShift</h1>
+        <p>Explore time across the globe. Compare timezones instantly from your Stream Deck.</p>
+      </div>
+      <div class="hero-deck" id="hero-deck">
+        <canvas width="144" height="144" id="hero-city-0"></canvas>
+        <canvas width="144" height="144" id="hero-city-1"></canvas>
+        <canvas width="144" height="144" id="hero-city-2"></canvas>
+        <canvas width="144" height="144" id="hero-city-3"></canvas>
+        <canvas width="144" height="144" id="hero-city-4"></canvas>
+        <div class="empty-slot"></div>
+        <canvas width="144" height="144" id="hero-ctrl-hp"></canvas>
+        <canvas width="144" height="144" id="hero-ctrl-hm"></canvas>
+        <canvas width="144" height="144" id="hero-ctrl-mp"></canvas>
+        <canvas width="144" height="144" id="hero-ctrl-mm"></canvas>
+        <div class="empty-slot"></div>
+        <div class="empty-slot"></div>
+        <canvas width="144" height="144" id="hero-ctrl-reset"></canvas>
+        <div class="empty-slot"></div>
+        <div class="empty-slot"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FRAME 2: Features -->
+  <div class="frame-wrapper">
+    <div class="frame-label">Frame 2 — Features (1920x960)</div>
+    <div class="frame features" id="frame-features">
+      <div class="feature-card">
+        <div class="icon">🌍</div>
+        <h3>Global Clocks</h3>
+        <p>Add as many city clocks as you want. Each shows live time with day/night indicator and date.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">⏰</div>
+        <h3>Time Travel</h3>
+        <p>Shift hours and minutes to see what time it will be anywhere. Tap for small jumps, hold for big leaps.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔄</div>
+        <h3>Auto Reset</h3>
+        <p>Automatically returns to real time after 60 seconds. Lock the offset when you need to compare longer.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FRAME 3: In action with offset -->
+  <div class="frame-wrapper">
+    <div class="frame-label">Frame 3 — In Action (1920x960)</div>
+    <div class="frame in-action" id="frame-action">
+      <div class="in-action-deck" id="action-deck">
+        <canvas width="144" height="144" id="action-city-0"></canvas>
+        <canvas width="144" height="144" id="action-city-1"></canvas>
+        <canvas width="144" height="144" id="action-city-2"></canvas>
+        <canvas width="144" height="144" id="action-city-3"></canvas>
+        <canvas width="144" height="144" id="action-city-4"></canvas>
+        <div class="empty-slot"></div>
+        <canvas width="144" height="144" id="action-ctrl-hp"></canvas>
+        <canvas width="144" height="144" id="action-ctrl-hm"></canvas>
+        <canvas width="144" height="144" id="action-ctrl-mp"></canvas>
+        <canvas width="144" height="144" id="action-ctrl-mm"></canvas>
+        <div class="empty-slot"></div>
+        <div class="empty-slot"></div>
+        <canvas width="144" height="144" id="action-ctrl-reset"></canvas>
+        <div class="empty-slot"></div>
+        <div class="empty-slot"></div>
+      </div>
+      <div class="in-action-info">
+        <h2>What time is it in 3 hours?</h2>
+        <p>Tap <span class="highlight">H+</span> to jump forward. All clocks shift together so you can compare timezones at a glance.</p>
+        <p>Hold any button for bigger jumps. The <span class="highlight">red offset badge</span> shows how far you've shifted from real time.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cities = [
+      { label: 'TLV', timezone: 'Asia/Jerusalem' },
+      { label: 'NYC', timezone: 'America/New_York' },
+      { label: 'LON', timezone: 'Europe/London' },
+      { label: 'TKY', timezone: 'Asia/Tokyo' },
+      { label: 'SFO', timezone: 'America/Los_Angeles' },
+    ];
+
+    function renderCityCanvas(canvasId, city, offsetMinutes) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      const now = new Date();
+      now.setMinutes(now.getMinutes() + offsetMinutes);
+
+      const timeStr = now.toLocaleTimeString('en-US', {
+        timeZone: city.timezone, hour: '2-digit', minute: '2-digit', hour12: true
+      });
+      const dateStr = now.toLocaleDateString('en-US', {
+        timeZone: city.timezone, month: 'short', day: 'numeric'
+      });
+      const hour = parseInt(now.toLocaleTimeString('en-US', {
+        timeZone: city.timezone, hour: 'numeric', hour12: false
+      }));
+      const isDay = hour >= 6 && hour < 20;
+
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fillRect(0, 0, 144, 144);
+
+      if (isDay) {
+        ctx.fillStyle = '#ffd93d';
+        ctx.beginPath(); ctx.arc(20, 18, 7, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#ffd93d'; ctx.lineWidth = 2;
+        for (let i = 0; i < 8; i++) {
+          const angle = (i * Math.PI) / 4;
+          ctx.beginPath();
+          ctx.moveTo(20 + Math.cos(angle) * 10, 18 + Math.sin(angle) * 10);
+          ctx.lineTo(20 + Math.cos(angle) * 14, 18 + Math.sin(angle) * 14);
+          ctx.stroke();
+        }
+      } else {
+        ctx.fillStyle = '#aabbdd';
+        ctx.beginPath(); ctx.arc(20, 18, 8, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#1a1a2e';
+        ctx.beginPath(); ctx.arc(25, 15, 7, 0, Math.PI * 2); ctx.fill();
+      }
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 22px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(city.label, 72, 28);
+
+      ctx.font = 'bold 32px Arial';
+      ctx.fillStyle = isDay ? '#ff9f43' : '#00d4ff';
+      ctx.fillText(timeStr, 72, 68);
+
+      ctx.font = 'bold 16px Arial'; ctx.fillStyle = '#ffffff';
+      ctx.fillText(dateStr, 72, 100);
+
+      if (offsetMinutes !== 0) {
+        const oh = Math.floor(Math.abs(offsetMinutes) / 60);
+        const om = Math.abs(offsetMinutes) % 60;
+        const sign = offsetMinutes > 0 ? '+' : '-';
+        let s = sign + oh + 'h';
+        if (om > 0) s += om + 'm';
+        ctx.font = 'bold 16px Arial'; ctx.fillStyle = '#ff6b6b';
+        ctx.fillText(s, 72, 130);
+      }
+    }
+
+    function roundedRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    function renderControlCanvas(canvasId, label, sublabel, color) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = '#1a1a2e'; ctx.fillRect(0, 0, 144, 144);
+      ctx.strokeStyle = color; ctx.lineWidth = 4;
+      roundedRect(ctx, 8, 8, 128, 128, 8);
+      ctx.stroke();
+
+      ctx.fillStyle = color;
+      ctx.font = 'bold 42px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(label, 72, 60);
+
+      ctx.font = '20px Arial'; ctx.fillStyle = '#aaaaaa';
+      ctx.fillText(sublabel, 72, 110);
+    }
+
+    function renderResetCanvas(canvasId, offset) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const color = offset === 0 ? '#666666' : '#ffd93d';
+
+      ctx.fillStyle = '#1a1a2e'; ctx.fillRect(0, 0, 144, 144);
+      ctx.strokeStyle = color; ctx.lineWidth = 4;
+      roundedRect(ctx, 8, 8, 128, 128, 8);
+      ctx.stroke();
+
+      ctx.strokeStyle = color; ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.arc(72, 58, 24, -Math.PI * 0.8, Math.PI * 0.6); ctx.stroke();
+
+      const tipX = 72 + 24 * Math.cos(Math.PI * 0.6);
+      const tipY = 58 + 24 * Math.sin(Math.PI * 0.6);
+      ctx.fillStyle = color; ctx.beginPath();
+      ctx.moveTo(tipX - 10, tipY - 6);
+      ctx.lineTo(tipX + 4, tipY - 2);
+      ctx.lineTo(tipX - 4, tipY + 10);
+      ctx.closePath(); ctx.fill();
+
+      ctx.font = 'bold 16px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = color; ctx.fillText('RESET', 72, 110);
+    }
+
+    function renderAll() {
+      // Hero deck (live, no offset)
+      cities.forEach((c, i) => renderCityCanvas('hero-city-' + i, c, 0));
+      renderControlCanvas('hero-ctrl-hp', 'H+', '1h / 3h', '#4ecca3');
+      renderControlCanvas('hero-ctrl-hm', 'H−', '1h / 3h', '#ff6b6b');
+      renderControlCanvas('hero-ctrl-mp', 'M+', '1m / 15m', '#4ecca3');
+      renderControlCanvas('hero-ctrl-mm', 'M−', '1m / 15m', '#ff6b6b');
+      renderResetCanvas('hero-ctrl-reset', 0);
+
+      // Action deck (+3h offset to show the feature)
+      const actionOffset = 180;
+      cities.forEach((c, i) => renderCityCanvas('action-city-' + i, c, actionOffset));
+      renderControlCanvas('action-ctrl-hp', 'H+', '1h / 3h', '#4ecca3');
+      renderControlCanvas('action-ctrl-hm', 'H−', '1h / 3h', '#ff6b6b');
+      renderControlCanvas('action-ctrl-mp', 'M+', '1m / 15m', '#4ecca3');
+      renderControlCanvas('action-ctrl-mm', 'M−', '1m / 15m', '#ff6b6b');
+      renderResetCanvas('action-ctrl-reset', actionOffset);
+    }
+
+    renderAll();
+    setInterval(renderAll, 1000);
+  </script>
+</body>
+</html>

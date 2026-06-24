@@ -182,7 +182,7 @@
       ctx.fillText(timeStr, 72, 68);
 
       ctx.font = 'bold 16px Arial';
-      ctx.fillStyle = '#666666';
+      ctx.fillStyle = '#ffffff';
       ctx.fillText(dateStr, 72, 100);
 
       if (globalOffsetMinutes !== 0) {
@@ -198,6 +198,20 @@
       }
     }
 
+    function roundedRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
     function renderControl(canvasId, label, sublabel, color) {
       const canvas = document.getElementById(canvasId);
       if (!canvas) return;
@@ -208,7 +222,8 @@
 
       ctx.strokeStyle = color;
       ctx.lineWidth = 4;
-      ctx.strokeRect(8, 8, 128, 128);
+      roundedRect(ctx, 8, 8, 128, 128, 8);
+      ctx.stroke();
 
       ctx.fillStyle = color;
       ctx.font = 'bold 42px Arial';
@@ -221,6 +236,49 @@
       ctx.fillText(sublabel, 72, 110);
     }
 
+    function renderResetButton(canvasId, color, locked) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fillRect(0, 0, 144, 144);
+
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 4;
+      roundedRect(ctx, 8, 8, 128, 128, 8);
+      ctx.stroke();
+
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.arc(72, 58, 24, -Math.PI * 0.8, Math.PI * 0.6);
+      ctx.stroke();
+
+      const tipX = 72 + 24 * Math.cos(Math.PI * 0.6);
+      const tipY = 58 + 24 * Math.sin(Math.PI * 0.6);
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(tipX - 10, tipY - 6);
+      ctx.lineTo(tipX + 4, tipY - 2);
+      ctx.lineTo(tipX - 4, tipY + 10);
+      ctx.closePath();
+      ctx.fill();
+
+      if (locked) {
+        ctx.strokeStyle = '#ff6b6b';
+        ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.moveTo(56, 42); ctx.lineTo(88, 74); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(88, 42); ctx.lineTo(56, 74); ctx.stroke();
+      }
+
+      ctx.font = 'bold 16px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = color;
+      ctx.fillText(locked ? 'LOCKED' : 'RESET', 72, 110);
+    }
+
     function updateAll() {
       cities.forEach((city, i) => renderCity('city-' + i, city));
 
@@ -230,7 +288,7 @@
       renderControl('ctrl-min-minus', 'M−', '1m / 15m', '#ff6b6b');
 
       const resetColor = autoResetDisabled ? '#ff6b6b' : (globalOffsetMinutes === 0 ? '#555' : '#ffd93d');
-      renderControl('ctrl-reset', '↺', autoResetDisabled ? 'LOCKED' : 'RESET', resetColor);
+      renderResetButton('ctrl-reset', resetColor, autoResetDisabled);
 
       const display = document.getElementById('offset-display');
       if (globalOffsetMinutes === 0) {
