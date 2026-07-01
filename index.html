@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TimeShift — World Clock</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'DSEG7';
+      src: url('https://cdn.jsdelivr.net/npm/dseg@0.46/fonts/DSEG7-Classic/DSEG7Classic-Regular.woff2') format('woff2'),
+           url('https://cdn.jsdelivr.net/npm/dseg@0.46/fonts/DSEG7-Classic/DSEG7Classic-Regular.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'DSEG7';
+      src: url('https://cdn.jsdelivr.net/npm/dseg@0.46/fonts/DSEG7-Classic/DSEG7Classic-Bold.woff2') format('woff2'),
+           url('https://cdn.jsdelivr.net/npm/dseg@0.46/fonts/DSEG7-Classic/DSEG7Classic-Bold.woff') format('woff');
+      font-weight: bold;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img class="logo" src="logo.png" alt="TimeShift" width="40" height="40">
+      <h1>TimeShift</h1>
+    </div>
+    <div class="header-center">
+      <span></span>
+      <button id="stop-time" class="stop-btn" title="Stop time">⏱ STOP TIME</button>
+      <div class="offset-status">
+        <span id="offset-display" class="offset-display"></span>
+        <button id="cancel-offset" class="cancel-btn hidden" title="Reset to real time">RESET</button>
+      </div>
+    </div>
+    <a href="settings.html" class="settings-btn" title="Settings">⚙</a>
+    <div class="keyboard-hint" id="keyboard-hint">
+      Click a clock to type a time · Scroll to shift ±1min · Shift+scroll ±1hr
+    </div>
+  </header>
+
+  <main>
+    <section id="clocks-area" class="clocks-area">
+      <p class="empty-state">Add cities from the panel on the right →</p>
+    </section>
+
+    <aside class="sidebar">
+      <div class="sidebar-search-section">
+        <div class="sidebar-header">
+          <h2>Add City</h2>
+          <input type="text" id="city-search" placeholder="Search timezone..." autocomplete="off">
+        </div>
+        <ul id="city-list" class="city-list"></ul>
+      </div>
+      <div class="sidebar-active-section">
+        <h3>Active Clocks</h3>
+        <ul id="active-list" class="active-list"></ul>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <a href="https://marketplace.elgato.com/product/timeshift-a5dc52b9-d663-4e01-b6da-146bd0e5badd" target="_blank" rel="noopener" class="marketplace-btn">
+      <span class="marketplace-icon">⬇</span>
+      Get TimeShift for Stream Deck — Elgato Marketplace
+    </a>
+    <div class="kofi-widget"></div>
+  </footer>
+
+  <script src="timezones.js"></script>
+  <script src="app.js"></script>
+  <script type="text/javascript" src="https://storage.ko-fi.com/cdn/widget/Widget_2.js"></script>
+  <script type="text/javascript">
+    kofiwidget2.init('Support me on Ko-fi', '#72a4f2', 'I7K421N01E');
+    document.querySelector('.kofi-widget').innerHTML = kofiwidget2.getHTML();
+  </script>
+</body>
+</html>

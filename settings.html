@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TimeShift — Settings</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img class="logo" src="logo.png" alt="TimeShift" width="40" height="40">
+      <h1>TimeShift</h1>
+    </div>
+    <a href="index.html" class="back-btn">← BACK</a>
+  </header>
+
+  <main class="settings-main">
+    <div class="settings-panel">
+      <h2 class="settings-title">Settings</h2>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Time Format</span>
+          <span class="setting-desc">Display clocks in 12-hour or 24-hour format</span>
+        </div>
+        <div class="toggle-group">
+          <button class="toggle-option" data-value="12h" id="fmt-12h">12H</button>
+          <button class="toggle-option" data-value="24h" id="fmt-24h">24H</button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Theme</span>
+          <span class="setting-desc">Switch between dark and light appearance</span>
+        </div>
+        <div class="toggle-group">
+          <button class="toggle-option" data-value="dark" id="theme-dark">DARK</button>
+          <button class="toggle-option" data-value="light" id="theme-light">LIGHT</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function() {
+      const settings = JSON.parse(localStorage.getItem('timeshift-settings') || '{}');
+
+      const timeFormat = settings.timeFormat || '12h';
+      const theme = settings.theme || 'dark';
+
+      if (theme === 'light') document.body.classList.add('light-mode');
+
+      document.getElementById('fmt-' + timeFormat).classList.add('active');
+      document.getElementById('theme-' + theme).classList.add('active');
+
+      document.querySelectorAll('.toggle-group').forEach(group => {
+        group.addEventListener('click', (e) => {
+          const btn = e.target.closest('.toggle-option');
+          if (!btn) return;
+
+          group.querySelectorAll('.toggle-option').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          const value = btn.dataset.value;
+          if (btn.id.startsWith('fmt-')) {
+            settings.timeFormat = value;
+          } else if (btn.id.startsWith('theme-')) {
+            settings.theme = value;
+            document.body.classList.toggle('light-mode', value === 'light');
+          }
+
+          localStorage.setItem('timeshift-settings', JSON.stringify(settings));
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
