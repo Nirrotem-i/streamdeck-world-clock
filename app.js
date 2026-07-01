@@ -499,4 +499,47 @@
   updateAll();
 
   setInterval(updateAll, 1000);
+
+  // --- Settings Modal ---
+  const settingsOverlay = document.getElementById('settings-overlay');
+  const settingsToggle = document.getElementById('settings-toggle');
+  const settingsClose = document.getElementById('settings-close');
+
+  function openSettings() {
+    const s = loadSettings();
+    settingsOverlay.querySelectorAll('.toggle-option').forEach(btn => {
+      const setting = btn.dataset.setting;
+      const value = btn.dataset.value;
+      const current = setting === 'timeFormat' ? (s.timeFormat || '12h') : (s.theme || 'dark');
+      btn.classList.toggle('active', value === current);
+    });
+    settingsOverlay.classList.remove('hidden');
+  }
+
+  function closeSettings() {
+    settingsOverlay.classList.add('hidden');
+  }
+
+  settingsToggle.addEventListener('click', openSettings);
+  settingsClose.addEventListener('click', closeSettings);
+  settingsOverlay.addEventListener('click', (e) => {
+    if (e.target === settingsOverlay) closeSettings();
+  });
+
+  settingsOverlay.querySelectorAll('.toggle-group').forEach(group => {
+    group.addEventListener('click', (e) => {
+      const btn = e.target.closest('.toggle-option');
+      if (!btn) return;
+
+      group.querySelectorAll('.toggle-option').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const s = loadSettings();
+      s[btn.dataset.setting] = btn.dataset.value;
+      localStorage.setItem('timeshift-settings', JSON.stringify(s));
+
+      if (btn.dataset.setting === 'theme') applyTheme();
+      updateAll();
+    });
+  });
 })();

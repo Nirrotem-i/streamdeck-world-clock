@@ -40,7 +40,7 @@
         <button id="cancel-offset" class="cancel-btn hidden" title="Reset to real time">RESET</button>
       </div>
     </div>
-    <a href="settings.html" class="settings-btn" title="Settings">⚙</a>
+    <button id="settings-toggle" class="settings-btn" title="Settings">⚙</button>
     <div class="keyboard-hint" id="keyboard-hint">
       Click a clock to type a time · Scroll to shift ±1min · Shift+scroll ±1hr
     </div>
@@ -73,6 +73,36 @@
     </a>
     <div class="kofi-widget"></div>
   </footer>
+
+  <!-- Settings Modal -->
+  <div id="settings-overlay" class="settings-overlay hidden">
+    <div class="settings-modal">
+      <button id="settings-close" class="settings-close" title="Close">✕</button>
+      <h2 class="settings-title">Settings</h2>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Time Format</span>
+          <span class="setting-desc">Display clocks in 12-hour or 24-hour format</span>
+        </div>
+        <div class="toggle-group">
+          <button class="toggle-option" data-setting="timeFormat" data-value="12h">12H</button>
+          <button class="toggle-option" data-setting="timeFormat" data-value="24h">24H</button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Theme</span>
+          <span class="setting-desc">Switch between dark and light appearance</span>
+        </div>
+        <div class="toggle-group">
+          <button class="toggle-option" data-setting="theme" data-value="dark">DARK</button>
+          <button class="toggle-option" data-setting="theme" data-value="light">LIGHT</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="timezones.js"></script>
   <script src="app.js"></script>
