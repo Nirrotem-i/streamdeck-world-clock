@@ -36,6 +36,15 @@ function svgToDataUri(svg) {
   return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 }
 
+// Last image sent per action id — skip setImage when nothing changed
+const lastSvg = new Map();
+
+function setImageIfChanged(action, svg) {
+  if (lastSvg.get(action.id) === svg) return;
+  lastSvg.set(action.id, svg);
+  action.setImage(svgToDataUri(svg)).catch(() => {});
+}
+
 function renderCity(id) {
   const entry = cityActions[id];
   if (!entry) return;
@@ -48,7 +57,7 @@ function renderCity(id) {
   <text x="72" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#ff6b6b">ERR</text>
   <text x="72" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#888888">Bad timezone</text>
 </svg>`;
-    entry.action.setImage(svgToDataUri(svg)).catch(() => {});
+    setImageIfChanged(entry.action, svg);
   }
 }
 
@@ -119,7 +128,7 @@ function renderCityInner(id, entry) {
   ${offsetLabel}
 </svg>`;
 
-  entry.action.setImage(svgToDataUri(svg)).catch(() => {});
+  setImageIfChanged(entry.action, svg);
 }
 
 function renderControl(id) {
@@ -179,7 +188,7 @@ function renderControl(id) {
 </svg>`;
   }
 
-  entry.action.setImage(svgToDataUri(svg)).catch(() => {});
+  setImageIfChanged(entry.action, svg);
 }
 
 // --- City Clock Action ---
@@ -201,6 +210,7 @@ class CityClockAction extends SingletonAction {
 
   onWillDisappear(ev) {
     delete cityActions[ev.action.id];
+    lastSvg.delete(ev.action.id);
   }
 
   onDidReceiveSettings(ev) {
@@ -229,6 +239,7 @@ function createControlAction(uuid) {
 
     onWillDisappear(ev) {
       delete controlActions[ev.action.id];
+      lastSvg.delete(ev.action.id);
     }
 
     onKeyDown(ev) {

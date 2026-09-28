@@ -1,6 +1,6 @@
 {
   "name": "streamdeck-world-clock",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Stream Deck World Clock plugin",
   "main": "src/plugin.js",
   "type": "commonjs",
