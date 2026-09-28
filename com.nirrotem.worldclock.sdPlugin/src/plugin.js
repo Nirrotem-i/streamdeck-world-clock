@@ -23,7 +23,6 @@ function scheduleAutoReset() {
 }
 
 function updateAllDisplays() {
-  scheduleAutoReset();
   for (const id of Object.keys(cityActions)) {
     renderCity(id);
   }
@@ -40,9 +39,10 @@ function svgToDataUri(svg) {
 const lastSvg = new Map();
 
 function setImageIfChanged(action, svg) {
-  if (lastSvg.get(action.id) === svg) return;
+  if (lastSvg.get(action.id) === svg) return false;
   lastSvg.set(action.id, svg);
-  action.setImage(svgToDataUri(svg)).catch(() => {});
+  action.setImage(svgToDataUri(svg)).catch((e) => streamDeck.logger.error(`setImage failed: ${e}`));
+  return true;
 }
 
 function renderCity(id) {
@@ -57,7 +57,11 @@ function renderCity(id) {
   <text x="72" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#ff6b6b">ERR</text>
   <text x="72" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#888888">Bad timezone</text>
 </svg>`;
-    setImageIfChanged(entry.action, svg);
+    // Alert and log once per bad setting, not on every tick
+    if (setImageIfChanged(entry.action, svg)) {
+      streamDeck.logger.warn(`Invalid timezone: ${entry.timezone}`);
+      entry.action.showAlert().catch(() => {});
+    }
   }
 }
 
@@ -261,6 +265,7 @@ function createControlAction(uuid) {
               else { scheduleAutoReset(); }
               break;
           }
+          scheduleAutoReset();
           updateAllDisplays();
         }
       }, LONG_PRESS_MS);
@@ -282,6 +287,7 @@ function createControlAction(uuid) {
             autoResetTimer = null;
             break;
         }
+        scheduleAutoReset();
         updateAllDisplays();
       }
       delete keyDownTimers[id];

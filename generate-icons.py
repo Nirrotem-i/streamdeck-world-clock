@@ -172,15 +172,9 @@ def main():
     os.makedirs(IMGS_DIR, exist_ok=True)
     print('Generating Stream Deck icons (white on transparent)...')
 
+    # Plugin icon must be PNG (256/512); all other icons ship as SVG only
     icons = [
-        ('plugin-icon', draw_clock, 72),
-        ('category-icon', draw_clock, 28),
-        ('clock-icon', draw_clock, 72),
-        ('hour-plus-icon', draw_hour_plus, 72),
-        ('hour-minus-icon', draw_hour_minus, 72),
-        ('min-plus-icon', draw_min_plus, 72),
-        ('min-minus-icon', draw_min_minus, 72),
-        ('reset-icon', draw_reset, 72),
+        ('plugin-icon', draw_clock, 256),
     ]
 
     for name, func, size in icons:
